@@ -12,7 +12,6 @@ public class ClearChat extends ButtonModule {
     @Override
     public void onPress() {
         Minecraft mc = Minecraft.getInstance();
-        mc.gui.getChat().clearMessages(true); // false = keep system messages
-        System.out.println("Chat cleared!");
+        mc.gui.getChat().clearMessages(true);
     }
 }

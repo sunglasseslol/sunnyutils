@@ -2,7 +2,9 @@ package dev.sunglasses.sunnyutils;
 
 import dev.sunglasses.sunnyutils.modules.*;
 import dev.sunglasses.sunnyutils.modules.Module;
+import dev.sunglasses.sunnyutils.utils.Gui;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.InputEvent;
@@ -39,8 +41,9 @@ public class SunnyUtils {
 
     @SubscribeEvent
     public void onRender(RenderGuiEvent.Post event) {
-        for (Module module : ModuleManager.getModules()) {
-            module.onRender(event.getGuiGraphics());
-        }
+//        for (Module module : ModuleManager.getModules()) {
+//            module.onRender(event.getGuiGraphics());
+//        }
+        Gui.drawModules(Minecraft.getInstance(), event.getGuiGraphics(), ModuleManager.getModules());
     }
 }
