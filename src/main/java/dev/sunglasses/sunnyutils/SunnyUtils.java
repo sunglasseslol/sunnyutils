@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 @Mod(SunnyUtils.MODID)
 public class SunnyUtils {
     public static final String MODID = "sunnyutils";
+    public static final String MOD_VERSION = "1.0.0";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public SunnyUtils(IEventBus modEventBus) {
@@ -41,9 +42,10 @@ public class SunnyUtils {
 
     @SubscribeEvent
     public void onRender(RenderGuiEvent.Post event) {
-//        for (Module module : ModuleManager.getModules()) {
-//            module.onRender(event.getGuiGraphics());
-//        }
+        Gui.drawString(Minecraft.getInstance(), event.getGuiGraphics(), "sunnyutils v" + MOD_VERSION, 5, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 10, 0xFFFFFFFF);
+        for (Module module : ModuleManager.getModules()) {
+            module.onRender(event.getGuiGraphics());
+        }
         Gui.drawModules(Minecraft.getInstance(), event.getGuiGraphics(), ModuleManager.getModules());
     }
 }

@@ -28,10 +28,8 @@ public abstract class FullbrightMixin {
     private void Gamma(CallbackInfoReturnable<OptionInstance<Double>> info) {
         Fullbright fb = ModuleManager.getModule(Fullbright.class);
         if (fb != null && fb.isEnabled()) {
-            LOGGER.info("gamma enabled");
             if (gamma.get() != 9999d) gamma.set(9999d);
         } else if (gamma.get() == 9999d) {
-            LOGGER.info("gamma disabled");
             gamma.set(1d);
         }
     }
