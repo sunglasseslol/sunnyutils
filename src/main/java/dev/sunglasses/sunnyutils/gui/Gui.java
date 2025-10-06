@@ -1,12 +1,20 @@
 package dev.sunglasses.sunnyutils.gui;
 
+import dev.sunglasses.sunnyutils.SunnyUtils;
+import dev.sunglasses.sunnyutils.gui.screens.CustomChat;
 import dev.sunglasses.sunnyutils.modules.ToggleModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import dev.sunglasses.sunnyutils.modules.Module;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 
 import java.util.List;
 
+@EventBusSubscriber(modid = SunnyUtils.MODID, value = Dist.CLIENT)
 public class Gui {
     public static void drawString(Minecraft mc, GuiGraphics gui, String text, int x, int y, int colour) {
         gui.drawString(mc.font, text, x, y, colour);
@@ -35,6 +43,14 @@ public class Gui {
                 // move down for next box
                 y += boxHeight + gap;
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onScreenOpen(ScreenEvent.Opening event) {
+        if (event.getScreen() instanceof ChatScreen vanilla) {
+            // replace vanilla chat with our custom version
+            event.setNewScreen(new CustomChat());
         }
     }
 
