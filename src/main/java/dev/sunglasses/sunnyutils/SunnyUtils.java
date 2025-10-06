@@ -24,6 +24,7 @@ public class SunnyUtils {
         new Fullbright();
         new ClearChat();
         new Coordinates();
+        new TestModule();
 
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
 
@@ -46,6 +47,7 @@ public class SunnyUtils {
         for (Module module : ModuleManager.getModules()) {
             module.onRender(event.getGuiGraphics());
         }
+        //Render toggled modules
         Gui.drawModules(Minecraft.getInstance(), event.getGuiGraphics(), ModuleManager.getModules());
     }
 }
