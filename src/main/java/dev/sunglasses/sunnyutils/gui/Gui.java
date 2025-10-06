@@ -1,6 +1,5 @@
-package dev.sunglasses.sunnyutils.utils;
+package dev.sunglasses.sunnyutils.gui;
 
-import dev.sunglasses.sunnyutils.SunnyUtils;
 import dev.sunglasses.sunnyutils.modules.ToggleModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
