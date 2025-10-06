@@ -2,7 +2,7 @@ package dev.sunglasses.sunnyutils;
 
 import dev.sunglasses.sunnyutils.modules.*;
 import dev.sunglasses.sunnyutils.modules.Module;
-import dev.sunglasses.sunnyutils.utils.Gui;
+import dev.sunglasses.sunnyutils.gui.Gui;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,7 +24,8 @@ public class SunnyUtils {
         new Fullbright();
         new ClearChat();
         new Coordinates();
-        new TestModule();
+        new Hitboxes();
+        new ChunkBorders();
 
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
 

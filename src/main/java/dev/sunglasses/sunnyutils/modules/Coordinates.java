@@ -1,6 +1,6 @@
 package dev.sunglasses.sunnyutils.modules;
 
-import dev.sunglasses.sunnyutils.utils.Gui;
+import dev.sunglasses.sunnyutils.gui.Gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
