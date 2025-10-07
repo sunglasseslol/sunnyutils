@@ -3,6 +3,7 @@ package dev.sunglasses.sunnyutils;
 import dev.sunglasses.sunnyutils.modules.*;
 import dev.sunglasses.sunnyutils.modules.Module;
 import dev.sunglasses.sunnyutils.gui.Gui;
+import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,7 +18,7 @@ import org.slf4j.Logger;
 @Mod(SunnyUtils.MODID)
 public class SunnyUtils {
     public static final String MODID = "sunnyutils";
-    public static final String MOD_VERSION = "1.0.0";
+    public static final String MOD_VERSION = "1.1.0";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public SunnyUtils(IEventBus modEventBus) {
@@ -36,7 +37,9 @@ public class SunnyUtils {
     public void onKey(InputEvent.Key event) {
         for (Module module : ModuleManager.getModules()) {
             KeyMapping km = module.getKeyMapping();
-            if (km != null && km.consumeClick()) {
+            // event.getAction == 1 <- we do this because if you don't, the module gets spam toggled.
+            // action 1 is equal to GLFW_PRESS which means it only fires on PRESS, it doesn't repeat, nor does it fire on releasing the key.
+            if (km != null && km.consumeClick() && event.getAction() == 1) {
                 module.toggle();
             }
         }

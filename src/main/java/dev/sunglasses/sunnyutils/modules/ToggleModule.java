@@ -1,11 +1,13 @@
 package dev.sunglasses.sunnyutils.modules;
 
+import net.minecraft.client.KeyMapping;
+
 public abstract class ToggleModule extends Module {
     private boolean enabled = false;
 
     public ToggleModule(String name, int defaultKey, String category) {
         super(name);
-        setKeyMapping(new net.minecraft.client.KeyMapping(
+        setKeyMapping(new KeyMapping(
                 "key.sunnyutils.modules." + name.toLowerCase(),
                 defaultKey,
                 category
