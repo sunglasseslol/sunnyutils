@@ -6,6 +6,7 @@ import dev.sunglasses.sunnyutils.modules.ToggleModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import dev.sunglasses.sunnyutils.modules.Module;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,14 +44,6 @@ public class Gui {
                 // move down for next box
                 y += boxHeight + gap;
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onScreenOpen(ScreenEvent.Opening event) {
-        if (event.getScreen() instanceof ChatScreen vanilla) {
-            // replace vanilla chat with our custom version
-            event.setNewScreen(new CustomChat());
         }
     }
 
