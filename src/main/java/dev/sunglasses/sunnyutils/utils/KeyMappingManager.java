@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils;
+package dev.sunglasses.sunnyutils.utils;
 
 import dev.sunglasses.sunnyutils.modules.Module;
 import dev.sunglasses.sunnyutils.modules.ModuleManager;
