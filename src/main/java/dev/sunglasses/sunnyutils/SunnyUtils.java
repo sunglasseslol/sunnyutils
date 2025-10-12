@@ -24,7 +24,7 @@ public class SunnyUtils {
     public SunnyUtils(IEventBus modEventBus) {
         new Fullbright();
         new ClearChat();
-        new Coordinates();
+        new WorldData();
         new Hitboxes();
         new ChunkBorders();
 

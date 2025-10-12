@@ -17,6 +17,12 @@ import java.util.List;
 
 @EventBusSubscriber(modid = SunnyUtils.MODID, value = Dist.CLIENT)
 public class Gui {
+    /*
+    x = 5 ; y = 5 = TOP LEFT
+    x = 5 ; y = .getGuiScaledHeight() = BOTTOM LEFT
+    x = 5 ; y = 5 = TOP RIGHT
+    x = 5 ; y = .getGuiScaledHeight() = BOTTOM RIGHT
+    */
     public static void drawString(Minecraft mc, GuiGraphics gui, String text, int x, int y, int colour) {
         gui.drawString(mc.font, text, x, y, colour);
     }

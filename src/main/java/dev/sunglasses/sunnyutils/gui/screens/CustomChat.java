@@ -32,14 +32,15 @@ public class CustomChat {
     public static void onScreenRender(ScreenEvent.Render.Post event) {
         if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
 
-        int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        double mouseX = event.getMouseX();
+        double mouseY = event.getMouseY();
+
+        Minecraft mc = Minecraft.getInstance();
+        int width = mc.getWindow().getGuiScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
 
         int x = width / 2 - BUTTON_WIDTH / 2;
         int y = height - 30 - BUTTON_HEIGHT - 5;
-
-        double mouseX = event.getMouseX();
-        double mouseY = event.getMouseY();
 
         // Hover detection
         boolean hovered = mouseX >= x && mouseX <= x + BUTTON_WIDTH &&
@@ -50,7 +51,6 @@ public class CustomChat {
         // Draw button background
         int bgColor = hovered ? 0xDF000000 : 0x7F000000; // red if hovered, black otherwise
         gui.fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, bgColor);
-
         // Draw outline if hovered
         if (hovered) {
             int outlineColor = 0xFFFFFFFF; // white outline
@@ -75,22 +75,14 @@ public class CustomChat {
         int textX = x + (BUTTON_WIDTH - textWidth) / 2;
         int textY = y + (BUTTON_HEIGHT - Minecraft.getInstance().font.lineHeight) / 2;
         gui.drawString(Minecraft.getInstance().font, text, textX, textY, 0xFFFFFFFF);
-
-        // Detect mouse clicks manually
-        if (Minecraft.getInstance().mouseHandler.isLeftPressed() && hovered) {
-            var player = Minecraft.getInstance().player;
-            if (player != null) {
-                var pos = player.blockPosition();
-                String coords = pos.getX() + " " + pos.getY() + " " + pos.getZ();
-                Minecraft.getInstance().keyboardHandler.setClipboard(coords);
-                player.displayClientMessage(Component.literal("Copied coordinates!"), true);
-            }
-        }
     }
     /** Handle mouse clicks exactly once per click */
     @SubscribeEvent
     public static void onMouseClick(ScreenEvent.MouseButtonPressed.Post event) {
         if (!(event.getScreen() instanceof ChatScreen)) return;
+
+        double mouseX = event.getMouseX();
+        double mouseY = event.getMouseY();
 
         Minecraft mc = Minecraft.getInstance();
         int width = mc.getWindow().getGuiScaledWidth();
@@ -98,9 +90,6 @@ public class CustomChat {
 
         int x = width / 2 - BUTTON_WIDTH / 2;
         int y = height - 30 - BUTTON_HEIGHT - 5;
-
-        double mouseX = event.getMouseX();
-        double mouseY = event.getMouseY();
 
         boolean hovered = mouseX >= x && mouseX <= x + BUTTON_WIDTH &&
                 mouseY >= y && mouseY <= y + BUTTON_HEIGHT;
