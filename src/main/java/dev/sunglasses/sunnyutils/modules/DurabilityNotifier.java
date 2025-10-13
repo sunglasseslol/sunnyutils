@@ -15,10 +15,11 @@ import java.util.List;
 import java.util.Set;
 
 public class DurabilityNotifier extends GenericModule {
-    private static final Set<ItemStack> alertedSlots = new HashSet<>();
     public DurabilityNotifier() {
         super("DurabilityNotifier");
     }
+
+    private static final Set<ItemStack> alertedSlots = new HashSet<>();
 
     private List<ItemStack> getAllPlayerItems(LocalPlayer player) {
         List<ItemStack> items = new ArrayList<>();

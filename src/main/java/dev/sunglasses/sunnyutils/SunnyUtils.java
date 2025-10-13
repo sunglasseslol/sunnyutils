@@ -30,6 +30,7 @@ public class SunnyUtils {
         new Hitboxes();
         new ChunkBorders();
         new DurabilityNotifier();
+        new ConfigScreen();
 
         // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
