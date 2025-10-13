@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.modules;
+package dev.sunglasses.sunnyutils.modules.base;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,4 +19,5 @@ public abstract class Module {
 
     public void toggle() {}
     public void onRender(GuiGraphics guiGraphics) {}
+    public void onTick() {}
 }

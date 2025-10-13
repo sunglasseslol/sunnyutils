@@ -1,6 +1,7 @@
 package dev.sunglasses.sunnyutils.modules;
 
 import dev.sunglasses.sunnyutils.gui.Gui;
+import dev.sunglasses.sunnyutils.modules.base.GenericModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,16 +24,14 @@ public class WorldData extends GenericModule {
 
             String coords = "XYZ: " + playerX + " / " + playerY + " / " + playerZ + " / " + mc.player.getDirection();
 
-
-
             Holder<Biome> biomeHolder = mc.level.getBiome(player.blockPosition());
-            String biome = biomeHolder.unwrapKey()
+            String biome = "biome/" + biomeHolder.unwrapKey()
                     .map(key -> key.location().toString())
                     .orElse("unknown");
 
 
-            Gui.drawString(mc, guiGraphics, coords, 5, mc.getWindow().getGuiScaledHeight() - 10 - mc.font.lineHeight - 2, 0xFFFFFFFF);
-            Gui.drawString(mc, guiGraphics, biome, 5, mc.getWindow().getGuiScaledHeight() - 20 - mc.font.lineHeight - 2, 0xFFFFFFFF);
+            Gui.drawString(mc, guiGraphics, coords, 5, mc.getWindow().getGuiScaledHeight() - 10, 0xFFFFFFFF);
+            Gui.drawString(mc, guiGraphics, biome, 5, mc.getWindow().getGuiScaledHeight() - 10 - mc.font.lineHeight, 0xFFFFFFFF);
         }
     }
 }

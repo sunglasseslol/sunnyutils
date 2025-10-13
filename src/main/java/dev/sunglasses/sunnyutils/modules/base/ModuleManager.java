@@ -1,6 +1,5 @@
-package dev.sunglasses.sunnyutils.modules;
+package dev.sunglasses.sunnyutils.modules.base;
 
-import dev.sunglasses.sunnyutils.modules.Module;
 import java.util.ArrayList;
 import java.util.List;
 

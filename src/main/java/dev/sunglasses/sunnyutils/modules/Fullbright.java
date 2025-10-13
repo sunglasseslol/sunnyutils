@@ -1,6 +1,6 @@
 package dev.sunglasses.sunnyutils.modules;
 
-import net.minecraft.client.Minecraft;
+import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import org.lwjgl.glfw.GLFW;
 
 public class Fullbright extends ToggleModule {

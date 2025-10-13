@@ -1,5 +1,6 @@
 package dev.sunglasses.sunnyutils.modules;
 
+import dev.sunglasses.sunnyutils.modules.base.ButtonModule;
 import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.Minecraft;
 

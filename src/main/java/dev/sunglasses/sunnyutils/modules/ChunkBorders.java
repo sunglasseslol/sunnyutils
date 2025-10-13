@@ -1,5 +1,6 @@
 package dev.sunglasses.sunnyutils.modules;
 
+import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 

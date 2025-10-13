@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.modules;
+package dev.sunglasses.sunnyutils.modules.base;
 
 import net.minecraft.client.KeyMapping;
 
