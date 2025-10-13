@@ -1,13 +1,15 @@
 package dev.sunglasses.sunnyutils;
 
 import dev.sunglasses.sunnyutils.modules.*;
-import dev.sunglasses.sunnyutils.modules.Module;
+import dev.sunglasses.sunnyutils.modules.base.Module;
 import dev.sunglasses.sunnyutils.gui.Gui;
+import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.fml.common.Mod;
@@ -18,18 +20,21 @@ import org.slf4j.Logger;
 @Mod(SunnyUtils.MODID)
 public class SunnyUtils {
     public static final String MODID = "sunnyutils";
-    public static final String MOD_VERSION = "1.1.0";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public SunnyUtils(IEventBus modEventBus) {
+        // register modules
         new Fullbright();
         new ClearChat();
         new WorldData();
         new Hitboxes();
         new ChunkBorders();
+        new DurabilityNotifier();
 
+        // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
 
+        // listens to anything in this class with @SubscribeEvent annotation
         NeoForge.EVENT_BUS.register(this);
     }
 
@@ -47,11 +52,19 @@ public class SunnyUtils {
 
     @SubscribeEvent
     public void onRender(RenderGuiEvent.Post event) {
-        Gui.drawString(Minecraft.getInstance(), event.getGuiGraphics(), "sunnyutils v" + MOD_VERSION, 5, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 10, 0xFFFFFFFF);
+        // sorta useless SOB
+        //Gui.drawString(Minecraft.getInstance(), event.getGuiGraphics(), "sunnyutils v" + MOD_VERSION, 5, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 10, 0xFFFFFFFF);
         for (Module module : ModuleManager.getModules()) {
             module.onRender(event.getGuiGraphics());
         }
         //Render toggled modules
         Gui.drawModules(Minecraft.getInstance(), event.getGuiGraphics(), ModuleManager.getModules());
+    }
+
+    @SubscribeEvent
+    public void onTick(ClientTickEvent.Post event) {
+        for (Module module : ModuleManager.getModules()) {
+            module.onTick();
+        }
     }
 }

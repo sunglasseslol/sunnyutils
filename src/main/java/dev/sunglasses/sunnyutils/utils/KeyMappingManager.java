@@ -1,7 +1,7 @@
 package dev.sunglasses.sunnyutils.utils;
 
-import dev.sunglasses.sunnyutils.modules.Module;
-import dev.sunglasses.sunnyutils.modules.ModuleManager;
+import dev.sunglasses.sunnyutils.modules.base.Module;
+import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 

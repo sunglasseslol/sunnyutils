@@ -1,17 +1,12 @@
 package dev.sunglasses.sunnyutils.gui;
 
 import dev.sunglasses.sunnyutils.SunnyUtils;
-import dev.sunglasses.sunnyutils.gui.screens.CustomChat;
-import dev.sunglasses.sunnyutils.modules.ToggleModule;
+import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import dev.sunglasses.sunnyutils.modules.Module;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.ChatScreen;
+import dev.sunglasses.sunnyutils.modules.base.Module;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ScreenEvent;
 
 import java.util.List;
 
