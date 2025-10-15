@@ -30,12 +30,13 @@ public class CustomChat {
 
     @SubscribeEvent
     public static void onScreenRender(ScreenEvent.Render.Post event) {
-        if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
+        if (!(event.getScreen() instanceof ChatScreen)) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        GuiGraphics gui = event.getGuiGraphics();
 
         double mouseX = event.getMouseX();
         double mouseY = event.getMouseY();
-
-        Minecraft mc = Minecraft.getInstance();
         int width = mc.getWindow().getGuiScaledWidth();
         int height = mc.getWindow().getGuiScaledHeight();
 
@@ -47,10 +48,9 @@ public class CustomChat {
                 mouseY >= y && mouseY <= y + BUTTON_HEIGHT;
 
         // Draw button background
-        GuiGraphics gui = event.getGuiGraphics();
-        // Draw button background
         int bgColor = hovered ? 0xDF000000 : 0x7F000000; // red if hovered, black otherwise
         gui.fill(x, y, x + BUTTON_WIDTH, y + BUTTON_HEIGHT, bgColor);
+
         // Draw outline if hovered
         if (hovered) {
             int outlineColor = 0xFFFFFFFF; // white outline
