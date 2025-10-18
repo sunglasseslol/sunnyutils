@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.modules;
+package dev.sunglasses.sunnyutils.modules.utilities;
 
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import org.lwjgl.glfw.GLFW;

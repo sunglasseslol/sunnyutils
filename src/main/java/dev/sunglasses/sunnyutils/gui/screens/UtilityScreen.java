@@ -12,20 +12,14 @@ import net.minecraft.client.Minecraft;
 WIP DOESNT EVEN DO ANYTHING YET 💔
 */
 
-public class ConfigScreen extends Screen {
+public class UtilityScreen extends Screen {
 
-    public ConfigScreen(Component title) {
+    public UtilityScreen(Component title) {
         super(title);
     }
     @Override
     protected void init() {
         Minecraft mc = Minecraft.getInstance();
-
-        HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 61, 33);
-        GridLayout gridlayout = new GridLayout();
-        gridlayout.defaultCellSetting().paddingHorizontal(4).paddingBottom(4).alignHorizontallyCenter();
-        GridLayout.RowHelper gridlayout$rowhelper = gridlayout.createRowHelper(1);
-        gridlayout$rowhelper.addChild(Gui.createButton("Copy Coords", Config::copyCoords));
 
         this.addRenderableWidget(Gui.createButton(
                 5,
@@ -37,8 +31,5 @@ public class ConfigScreen extends Screen {
                     mc.setScreen(null);
                 }
         ));
-
-        layout.addToContents(gridlayout);
-        layout.arrangeElements();
     }
 }

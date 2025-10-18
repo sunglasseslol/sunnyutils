@@ -1,5 +1,5 @@
 package dev.sunglasses.sunnyutils.mixin;
-import dev.sunglasses.sunnyutils.modules.Fullbright;
+import dev.sunglasses.sunnyutils.modules.utilities.Fullbright;
 import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;

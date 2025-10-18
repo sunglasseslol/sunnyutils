@@ -1,6 +1,5 @@
-package dev.sunglasses.sunnyutils.modules;
+package dev.sunglasses.sunnyutils.modules.hud;
 
-import dev.sunglasses.sunnyutils.SunnyUtils;
 import dev.sunglasses.sunnyutils.modules.base.GenericModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

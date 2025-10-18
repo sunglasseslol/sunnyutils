@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.modules;
+package dev.sunglasses.sunnyutils.modules.hud;
 
 import dev.sunglasses.sunnyutils.modules.base.ButtonModule;
 import org.lwjgl.glfw.GLFW;

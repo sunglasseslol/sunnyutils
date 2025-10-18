@@ -29,7 +29,16 @@ public class Gui {
     /**
      * Creates a button with given position, size, text, and action.
      */
+
     public static Button createButton(int x, int y, int width, int height, String text, Button.OnPress onPress) {
+        return Button.builder(Component.literal(text), onPress).bounds(x, y, width, height).build();
+    }
+
+    /**
+     * Creates a button with given text, and action.
+     */
+
+    public static Button createButton(String text, Button.OnPress onPress) {
         return Button.builder(Component.literal(text), onPress).build();
     }
 
