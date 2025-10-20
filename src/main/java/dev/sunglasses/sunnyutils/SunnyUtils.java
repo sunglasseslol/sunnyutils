@@ -1,12 +1,10 @@
 package dev.sunglasses.sunnyutils;
 
-import dev.sunglasses.sunnyutils.modules.base.Module;
 import dev.sunglasses.sunnyutils.gui.Gui;
-import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
-import dev.sunglasses.sunnyutils.modules.hud.ClearChat;
-import dev.sunglasses.sunnyutils.modules.hud.DurabilityNotifier;
-import dev.sunglasses.sunnyutils.modules.hud.WorldData;
-import dev.sunglasses.sunnyutils.modules.screen.ConfigScreenOpener;
+import dev.sunglasses.sunnyutils.modules.base.*;
+import dev.sunglasses.sunnyutils.modules.base.Module;
+import dev.sunglasses.sunnyutils.modules.hud.*;
+import dev.sunglasses.sunnyutils.modules.screen.*;
 import dev.sunglasses.sunnyutils.modules.utilities.*;
 import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import net.minecraft.client.KeyMapping;
@@ -35,6 +33,7 @@ public class SunnyUtils {
         new ChunkBorders();
         new DurabilityNotifier();
         new ConfigScreenOpener();
+        new UtilityScreenOpener();
 
         // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);

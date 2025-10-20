@@ -1,29 +1,31 @@
 package dev.sunglasses.sunnyutils.gui.screens;
 
-import dev.sunglasses.sunnyutils.gui.Config;
 import dev.sunglasses.sunnyutils.gui.Gui;
-import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.Minecraft;
 
-/*
-WIP DOESNT EVEN DO ANYTHING YET 💔
-*/
-
 public class UtilityScreen extends Screen {
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 61, 33);
 
     public UtilityScreen(Component title) {
         super(title);
     }
     @Override
     protected void init() {
+
         Minecraft mc = Minecraft.getInstance();
 
+        LinearLayout linearlayout = this.layout.addToHeader(LinearLayout.vertical().spacing(8));
+        linearlayout.addChild(new StringWidget(this.title, this.font), LayoutSettings::alignHorizontallyCenter);
+
         this.addRenderableWidget(Gui.createButton(
+                mc.getWindow().getGuiScaledWidth() - mc.font.width("Back") - 5 - 100,
                 5,
-                mc.getWindow().getGuiScaledHeight() - 25,
                 100,
                 20,
                 "Back",

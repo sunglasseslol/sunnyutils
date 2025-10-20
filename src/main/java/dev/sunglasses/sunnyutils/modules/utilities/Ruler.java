@@ -59,7 +59,7 @@ public class Ruler {
 
         // Slightly inflate to prevent z-fighting
         for (AABB aabb : shape.toAabbs()) {
-            AABB box = aabb.move(pos).inflate(0.002);
+            AABB box = aabb.move(pos).inflate(0.01);
             renderBox(consumer, mat, box, r, g, b, a);
         }
 
