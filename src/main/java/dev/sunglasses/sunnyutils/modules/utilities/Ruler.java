@@ -6,10 +6,12 @@ import dev.sunglasses.sunnyutils.SunnyUtils;
 import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import dev.sunglasses.sunnyutils.render.Renderer;
+import dev.sunglasses.sunnyutils.utils.MathUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.AABB;
@@ -20,6 +22,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
+import java.util.Set;
 
 @EventBusSubscriber(modid = SunnyUtils.MODID)
 public class Ruler extends ToggleModule {
@@ -44,6 +47,16 @@ public class Ruler extends ToggleModule {
 
     private static BlockPos firstPos = null;
     private static BlockPos secondPos = null;
+
+    private static boolean areaMode = false;
+
+    public void changeAreaMode() {
+        areaMode = !areaMode;
+    }
+
+    public void setAreaMode(boolean state) {
+        areaMode = state;
+    }
 
     private static long lastClickTime = 0;
     @SubscribeEvent
@@ -77,7 +90,7 @@ public class Ruler extends ToggleModule {
     public static void onRenderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
         Minecraft mc = Minecraft.getInstance();
         Ruler ruler = ModuleManager.getModule(Ruler.class);
-        if (mc.level == null && !ruler.isEnabled()) return;
+        if (mc.level == null || ruler == null || !ruler.isEnabled()) return;
 
         PoseStack poseStack = event.getPoseStack();
         Camera camera = mc.gameRenderer.getMainCamera();
@@ -90,13 +103,16 @@ public class Ruler extends ToggleModule {
         VertexConsumer consumer = bufferSource.getBuffer(HIGHLIGHT_BOX);
         Matrix4f mat = poseStack.last().pose();
 
-        // Highlight selected points
+        // Green = first point, Red = second point
         if (firstPos != null) renderHighlightBox(consumer, mat, firstPos, 0f, 1f, 0f, 0.4f);
         if (secondPos != null) renderHighlightBox(consumer, mat, secondPos, 1f, 0f, 0f, 0.4f);
 
-        // If both are set, draw line and highlight blocks between
         if (firstPos != null && secondPos != null) {
-            highlightBetweenBlocks(consumer, mat, firstPos, secondPos);
+            if (areaMode) {
+                Renderer.renderArea(consumer, mat, firstPos, secondPos);
+            } else {
+                Renderer.renderLine(consumer, mat, firstPos, secondPos);
+            }
         }
 
         poseStack.popPose();
@@ -104,25 +120,20 @@ public class Ruler extends ToggleModule {
     }
 
     private static void renderHighlightBox(VertexConsumer vc, Matrix4f mat, BlockPos pos, float r, float g, float b, float a) {
-        AABB box = new AABB(pos).inflate(0.01);
+        AABB box = new AABB(pos).inflate(0.002); // slight inflation to avoid z-fighting
         Renderer.renderBox(vc, mat, box, r, g, b, a);
     }
 
     private static void highlightBetweenBlocks(VertexConsumer consumer, Matrix4f mat, BlockPos firstPos, BlockPos secondPos) {
-        int minX = Math.min(firstPos.getX(), secondPos.getX());
-        int minY = Math.min(firstPos.getY(), secondPos.getY());
-        int minZ = Math.min(firstPos.getZ(), secondPos.getZ());
-        int maxX = Math.max(firstPos.getX(), secondPos.getX());
-        int maxY = Math.max(firstPos.getY(), secondPos.getY());
-        int maxZ = Math.max(firstPos.getZ(), secondPos.getZ());
+        Set<BlockPos> lineBlocks = MathUtils.computeLine(firstPos, secondPos);
 
-        // Loop through each block
-        for (int x = minX; x <= maxX; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                for (int z = minZ; z <= maxZ; z++) {
-                    AABB box = new AABB(new BlockPos(x, y, z)).inflate(0.01);
-                    Renderer.renderBox(consumer, mat, box, 0.2f, 0.7f, 1f, 0.2f); // cyan highlight
-                }
+        for (BlockPos pos : lineBlocks) {
+            for (Direction dir : Direction.values()) {
+                BlockPos neighbor = pos.relative(dir);
+                if (lineBlocks.contains(neighbor)) continue; // skip internal face
+
+                AABB box = new AABB(pos).inflate(0.001); // small inflation to prevent flicker
+                Renderer.renderFace(consumer, mat, box, dir, 0.2f, 0.7f, 1f, 0.25f); // cyan faces
             }
         }
     }

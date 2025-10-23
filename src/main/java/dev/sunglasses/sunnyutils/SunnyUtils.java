@@ -11,6 +11,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
@@ -24,7 +26,7 @@ public class SunnyUtils {
     public static final String MODID = "sunnyutils";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public SunnyUtils(IEventBus modEventBus) {
+    public SunnyUtils(IEventBus modEventBus, ModContainer modContainer) {
         // register modules
         new Fullbright();
         new ClearChat();
@@ -38,6 +40,7 @@ public class SunnyUtils {
 
         // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
+        modContainer.registerConfig(ModConfig.Type.COMMON, dev.sunglasses.sunnyutils.utils.Options.SPEC);
 
         // listens to anything in this class with @SubscribeEvent annotation
         NeoForge.EVENT_BUS.register(this);
