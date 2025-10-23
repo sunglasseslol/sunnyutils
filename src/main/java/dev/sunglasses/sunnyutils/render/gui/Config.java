@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.gui;
+package dev.sunglasses.sunnyutils.render.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;

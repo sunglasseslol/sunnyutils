@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.gui.screens;
+package dev.sunglasses.sunnyutils.render.gui.screens;
 
 import dev.sunglasses.sunnyutils.SunnyUtils;
 import net.minecraft.client.Minecraft;

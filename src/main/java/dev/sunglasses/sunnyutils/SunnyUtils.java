@@ -1,6 +1,6 @@
 package dev.sunglasses.sunnyutils;
 
-import dev.sunglasses.sunnyutils.gui.Gui;
+import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.modules.base.*;
 import dev.sunglasses.sunnyutils.modules.base.Module;
 import dev.sunglasses.sunnyutils.modules.hud.*;
@@ -34,6 +34,7 @@ public class SunnyUtils {
         new DurabilityNotifier();
         new ConfigScreenOpener();
         new UtilityScreenOpener();
+        new Ruler();
 
         // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);

@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.gui;
+package dev.sunglasses.sunnyutils.render.gui;
 
 import dev.sunglasses.sunnyutils.SunnyUtils;
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
@@ -6,9 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import dev.sunglasses.sunnyutils.modules.base.Module;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
 

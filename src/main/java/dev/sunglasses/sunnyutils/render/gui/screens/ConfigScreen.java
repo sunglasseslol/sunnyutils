@@ -1,7 +1,7 @@
-package dev.sunglasses.sunnyutils.gui.screens;
+package dev.sunglasses.sunnyutils.render.gui.screens;
 
-import dev.sunglasses.sunnyutils.gui.Config;
-import dev.sunglasses.sunnyutils.gui.Gui;
+import dev.sunglasses.sunnyutils.render.gui.Config;
+import dev.sunglasses.sunnyutils.render.gui.Gui;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
