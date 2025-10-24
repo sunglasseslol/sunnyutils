@@ -12,9 +12,9 @@ public class MathUtils {
         int x1 = start.getX(), y1 = start.getY(), z1 = start.getZ();
         int x2 = end.getX(), y2 = end.getY(), z2 = end.getZ();
 
-        int dx = java.lang.Math.abs(x2 - x1);
-        int dy = java.lang.Math.abs(y2 - y1);
-        int dz = java.lang.Math.abs(z2 - z1);
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int dz = Math.abs(z2 - z1);
 
         int xs = x1 < x2 ? 1 : -1;
         int ys = y1 < y2 ? 1 : -1;

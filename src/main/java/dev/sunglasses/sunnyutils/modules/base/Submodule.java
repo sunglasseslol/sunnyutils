@@ -3,12 +3,11 @@ package dev.sunglasses.sunnyutils.modules.base;
 import net.minecraft.client.KeyMapping;
 
 public abstract class Submodule extends Module {
-    private boolean enabled = false;
-    private ToggleModule parentModule;
+    private static ToggleModule parentModule;
 
     public Submodule(String name, int defaultKey, String category, ToggleModule parentModule) {
         super(name);
-        this.parentModule = parentModule;
+        Submodule.parentModule = parentModule;
         setKeyMapping(new KeyMapping(
                 "key.sunnyutils.modules." + name.toLowerCase(),
                 defaultKey,
@@ -16,7 +15,7 @@ public abstract class Submodule extends Module {
         ));
     }
 
-    public boolean isEnabled() { return enabled; }
+    public static ToggleModule getParentModule() { return parentModule; }
 
     public boolean isParentEnabled() { return parentModule.isEnabled(); }
 

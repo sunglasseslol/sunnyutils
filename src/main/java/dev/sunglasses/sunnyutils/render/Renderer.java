@@ -7,6 +7,7 @@ import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import dev.sunglasses.sunnyutils.utils.MathUtils;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Renderer {
@@ -53,13 +54,22 @@ public class Renderer {
         int maxY = Math.max(first.getY(), second.getY());
         int maxZ = Math.max(first.getZ(), second.getZ());
 
+        Set<BlockPos> blocks = new HashSet<>();
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    AABB box = new AABB(pos).inflate(0.001);
-                    Renderer.renderBox(consumer, mat, box, 0.2f, 0.7f, 1f, 0.15f);
+                    BlockPos block = new BlockPos(x, y, z);
+                    blocks.add(block);
                 }
+            }
+        }
+
+        for (BlockPos pos : blocks) {
+            for (Direction dir : Direction.values()) {
+                BlockPos neighbor = pos.relative(dir);
+                if (blocks.contains(neighbor)) continue;
+                AABB box = new AABB(pos).inflate(0.0001);
+                renderFace(consumer, mat, box, dir, 0.2f, 0.7f, 1f, 0.25f);
             }
         }
     }

@@ -4,6 +4,7 @@ import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.modules.base.Submodule;
 import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class RulerAreaToggle extends Submodule {
@@ -16,6 +17,9 @@ public class RulerAreaToggle extends Submodule {
     public void onPress() {
         if(!isParentEnabled()) return;
         Minecraft mc = Minecraft.getInstance();
-        mc.gui.getChat().clearMessages(true);
+        if(mc.level == null || mc.player == null) return;
+
+        Ruler.changeAreaMode();
+        mc.player.displayClientMessage(Component.literal("Area Mode: " + (Ruler.getAreaMode() ? "ON" : "OFF")), true);
     }
 }

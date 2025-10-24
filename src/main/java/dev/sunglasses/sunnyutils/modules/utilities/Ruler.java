@@ -50,12 +50,12 @@ public class Ruler extends ToggleModule {
 
     private static boolean areaMode = false;
 
+    public static boolean getAreaMode() { return areaMode; }
+
+    public static void changeAreaMode() { areaMode = !areaMode; }
+
     public static void setAreaMode(boolean state) {
         areaMode = state;
-    }
-
-    public static boolean getAreaMode() {
-        return areaMode;
     }
 
     private static long lastClickTime = 0;
@@ -137,7 +137,7 @@ public class Ruler extends ToggleModule {
         Gui.drawString(mc, guiGraphics, text, mc.getWindow().getGuiScaledWidth() - mc.font.width(text) - 5, 5, 0xFFFFFFFF);
     }
 
-    private static void renderHighlightBox(VertexConsumer vc, Matrix4f mat, BlockPos pos, float r, float g, float b, float a) {
+    public static void renderHighlightBox(VertexConsumer vc, Matrix4f mat, BlockPos pos, float r, float g, float b, float a) {
         AABB box = new AABB(pos).inflate(0.002); // slight inflation to avoid z-fighting
         Renderer.renderBox(vc, mat, box, r, g, b, a);
     }
