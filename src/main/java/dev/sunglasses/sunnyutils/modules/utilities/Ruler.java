@@ -52,6 +52,11 @@ public class Ruler extends ToggleModule {
 
     public static boolean getAreaMode() { return areaMode; }
 
+    public static void clear() {
+        firstPos = null;
+        secondPos = null;
+    }
+
     public static void changeAreaMode() { areaMode = !areaMode; }
 
     public static void setAreaMode(boolean state) {

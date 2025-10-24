@@ -1,16 +1,11 @@
 package dev.sunglasses.sunnyutils.render.gui.screens;
 
-import com.mojang.datafixers.types.templates.Check;
 import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
-import dev.sunglasses.sunnyutils.utils.Options;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 /*
 WIP DOESNT EVEN DO ANYTHING YET 💔

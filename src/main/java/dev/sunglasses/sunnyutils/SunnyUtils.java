@@ -1,6 +1,7 @@
 package dev.sunglasses.sunnyutils;
 
 import dev.sunglasses.sunnyutils.modules.utilities.submodules.RulerAreaToggle;
+import dev.sunglasses.sunnyutils.modules.utilities.submodules.RulerClear;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.modules.base.*;
 import dev.sunglasses.sunnyutils.modules.base.Module;
@@ -8,27 +9,21 @@ import dev.sunglasses.sunnyutils.modules.hud.*;
 import dev.sunglasses.sunnyutils.modules.screen.*;
 import dev.sunglasses.sunnyutils.modules.utilities.*;
 import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
-import dev.sunglasses.sunnyutils.utils.Options;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.fml.common.Mod;
-import com.mojang.logging.LogUtils;
 import net.neoforged.neoforge.common.NeoForge;
-import org.slf4j.Logger;
 
 @Mod(SunnyUtils.MODID)
 public class SunnyUtils {
     public static final String MODID = "sunnyutils";
-    public static final Logger LOGGER = LogUtils.getLogger();
 
-    public SunnyUtils(IEventBus modEventBus, ModContainer modContainer) {
+    public SunnyUtils(IEventBus modEventBus) {
         // register modules
         new Fullbright();
         new ClearChat();
@@ -42,14 +37,13 @@ public class SunnyUtils {
 
         // register submodules
         new RulerAreaToggle();
+        new RulerClear();
 
         // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
 
         // listens to anything in this class with @SubscribeEvent annotation
         NeoForge.EVENT_BUS.register(this);
-
-        modContainer.registerConfig(ModConfig.Type.COMMON, Options.SPEC);
     }
 
     @SubscribeEvent
