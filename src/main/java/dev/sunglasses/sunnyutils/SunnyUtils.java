@@ -1,5 +1,6 @@
 package dev.sunglasses.sunnyutils;
 
+import dev.sunglasses.sunnyutils.modules.utilities.submodules.RulerAreaToggle;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.modules.base.*;
 import dev.sunglasses.sunnyutils.modules.base.Module;
@@ -7,6 +8,7 @@ import dev.sunglasses.sunnyutils.modules.hud.*;
 import dev.sunglasses.sunnyutils.modules.screen.*;
 import dev.sunglasses.sunnyutils.modules.utilities.*;
 import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
+import dev.sunglasses.sunnyutils.utils.Options;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,12 +40,16 @@ public class SunnyUtils {
         new UtilityScreenOpener();
         new Ruler();
 
+        // register submodules
+        new RulerAreaToggle();
+
         // register the key bindings
         modEventBus.addListener(KeyMappingManager::registerAllKeyMappings);
-        modContainer.registerConfig(ModConfig.Type.COMMON, dev.sunglasses.sunnyutils.utils.Options.SPEC);
 
         // listens to anything in this class with @SubscribeEvent annotation
         NeoForge.EVENT_BUS.register(this);
+
+        modContainer.registerConfig(ModConfig.Type.COMMON, Options.SPEC);
     }
 
     @SubscribeEvent

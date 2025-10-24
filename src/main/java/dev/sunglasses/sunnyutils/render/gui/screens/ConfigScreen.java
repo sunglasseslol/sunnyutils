@@ -1,10 +1,16 @@
 package dev.sunglasses.sunnyutils.render.gui.screens;
 
+import com.mojang.datafixers.types.templates.Check;
+import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
+import dev.sunglasses.sunnyutils.render.gui.Gui;
+import dev.sunglasses.sunnyutils.utils.Options;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 /*
 WIP DOESNT EVEN DO ANYTHING YET 💔
@@ -13,11 +19,11 @@ WIP DOESNT EVEN DO ANYTHING YET 💔
 public class ConfigScreen extends Screen {
     private final Screen parent;
 
-    protected ConfigScreen(Screen parent) {
+    public ConfigScreen(Screen parent) {
         super(Component.literal("Configuration"));
         this.parent = parent;
     }
-w
+
     @Override
     protected void init() {
         super.init();
@@ -28,21 +34,20 @@ w
             this.minecraft.setScreen(parent);
         }).pos(x, y + 70).size(200, 20).build());
 
-        // Add a checkbox or button for your areaMode toggle
-        this.addRenderableWidget(
-                Checkbox.builder(Component.literal("Area Mode for Ruler"), options.CLIENT.rulerSettings.rulerMode.get())
-                        .pos(x, y).size(200, 20)
-                        .onPress(cb -> {
-                            boolean newVal = !options.CLIENT.rulerSettings.rulerMode.get();
-                            options.CLIENT.rulerSettings.rulerMode.set(newVal);
-                            cb.setChecked(newVal);
-                        }).build()
-        );
+        this.addRenderableWidget(Gui.createCycleButton(
+                x, y, 100, 20,
+                "Area Mode",
+                (btn, value) -> {
+                    Ruler.setAreaMode(value);
+                    // Optional: save config or show message
+                },
+                Ruler.getAreaMode()
+        ));
+
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFF);
         super.render(graphics, mouseX, mouseY, partialTick);
     }
