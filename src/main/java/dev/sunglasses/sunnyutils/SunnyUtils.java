@@ -34,6 +34,8 @@ public class SunnyUtils {
         new ConfigScreenOpener();
         new UtilityScreenOpener();
         new Ruler();
+        new Scaffold();
+        new XRay();
 
         // register submodules
         new RulerAreaToggle();
