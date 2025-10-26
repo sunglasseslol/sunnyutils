@@ -3,19 +3,28 @@ package dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs;
 import dev.sunglasses.sunnyutils.render.gui.screens.ConfigScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 public class XRayConfig extends ConfigScreen {
-    private final Screen parent;
-
-    public XRayConfig(Screen parent) {
-        super(new ConfigScreen(null));
-        this.parent = parent;
+    public XRayConfig(Screen parent, Component title) {
+        super(new ConfigScreen(null, Component.literal("Configuration")), Component.literal("XRay"));
     }
 
     @Override
-    public void onClose() {
+    protected void init() {
         if (this.minecraft == null) return;
-        this.minecraft.setScreen(parent);
-        super.onClose();
+
+        this.addRenderableWidget(drawBackButton(this.minecraft));
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        if (this.minecraft == null) return;
+        //
+
+
+
+        //
+        super.render(graphics, mouseX, mouseY, partialTick);
     }
 }

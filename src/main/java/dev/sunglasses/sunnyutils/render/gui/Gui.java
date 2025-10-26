@@ -20,6 +20,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import org.joml.Matrix4f;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = SunnyUtils.MODID, value = Dist.CLIENT)
 public class Gui {
@@ -73,6 +74,11 @@ public class Gui {
 
     public static Button createButton(int x, int y, int width, int height, String text, Button.OnPress onPress) {
         return Button.builder(Component.literal(text), onPress).bounds(x, y, width, height).build();
+    }
+
+    public static Button openScreenButton(int x, int y, int width, int height, String name, Supplier<Screen> screenSupplier) {
+        Minecraft mc = Minecraft.getInstance();
+        return createButton(x, y, width, height, name, (btn) -> mc.setScreen(screenSupplier.get()));
     }
 
     public static void drawModules(Minecraft mc, GuiGraphics gui, List<Module> modules) {
