@@ -36,6 +36,9 @@ public class XRay extends ToggleModule {
         XRAY_BLOCKS.put(Blocks.DIAMOND_ORE, new float[]{0.0f, 1.0f, 1.0f, 0.8f});
         XRAY_BLOCKS.put(Blocks.DEEPSLATE_DIAMOND_ORE, new float[]{0.0f, 1.0f, 1.0f, 0.8f});
 
+        XRAY_BLOCKS.put(Blocks.COAL_ORE, new float[]{0.0f, 0.0f, 0.0f, 0.8f});
+        XRAY_BLOCKS.put(Blocks.DEEPSLATE_COAL_ORE, new float[]{0.0f, 0.0f, 10.0f, 0.8f});
+
         // Emeralds - Green
         XRAY_BLOCKS.put(Blocks.EMERALD_ORE, new float[]{0.0f, 1.0f, 0.0f, 0.8f});
         XRAY_BLOCKS.put(Blocks.DEEPSLATE_EMERALD_ORE, new float[]{0.0f, 1.0f, 0.0f, 0.8f});
@@ -67,21 +70,6 @@ public class XRay extends ToggleModule {
         // Nether Quartz - White
         XRAY_BLOCKS.put(Blocks.NETHER_QUARTZ_ORE, new float[]{1.0f, 1.0f, 1.0f, 0.8f});
     }
-
-    private static final RenderType XRAY_RENDER_TYPE = RenderType.create(
-            "xray_boxes",
-            1536, // buffer size (same as most built-ins)
-            false, // affectsCrumbling
-            true,  // sortOnUpload
-            RenderPipelines.DEBUG_QUADS, // the pipeline defines POSITION_COLOR
-            RenderType.CompositeState.builder()
-                    .setTextureState(RenderStateShard.NO_TEXTURE)
-                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
-                    .setOverlayState(RenderStateShard.NO_OVERLAY)
-                    .setLayeringState(RenderStateShard.NO_LAYERING)
-                    .setOutputState(RenderStateShard.MAIN_TARGET)
-                    .createCompositeState(false)
-    );
 
     // Cache ore positions to avoid rescanning every frame
     private static final Map<BlockPos, float[]> oreCache = new HashMap<>();
@@ -128,7 +116,7 @@ public class XRay extends ToggleModule {
         poseStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        VertexConsumer consumer = bufferSource.getBuffer(XRAY_RENDER_TYPE);
+        VertexConsumer consumer = bufferSource.getBuffer(Renderer.SOLID_BOX);
         Matrix4f matrix = poseStack.last().pose();
 
         // Only render ores within render distance
@@ -142,7 +130,7 @@ public class XRay extends ToggleModule {
         }
 
         poseStack.popPose();
-        bufferSource.endBatch(XRAY_RENDER_TYPE);
+        bufferSource.endBatch(Renderer.SOLID_BOX);
     }
 
     private static void scanForOres(Minecraft mc, BlockPos playerPos) {

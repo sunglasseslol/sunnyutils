@@ -30,7 +30,7 @@ public class Gui {
     mc.getWindow().getGuiScaledWidth() - mc.font.width(s) - 5, mc.getWindow().getGuiScaledHeight(), = BOTTOM RIGHT
     */
 
-    public static void drawString(Minecraft mc, GuiGraphics gui, String text, int x, int y, int colour) {
+    public static void drawString(Minecraft mc, GuiGraphics gui, Component text, int x, int y, int colour) {
         gui.drawString(mc.font, text, x, y, colour);
     }
 
@@ -75,13 +75,6 @@ public class Gui {
         return Button.builder(Component.literal(text), onPress).bounds(x, y, width, height).build();
     }
 
-    public static CycleButton<Boolean> createCycleButton(int x, int y, int width, int height, String text, CycleButton.OnValueChange<Boolean> change, boolean initial) {
-        return CycleButton.onOffBuilder()
-                .withInitialValue(Ruler.getAreaMode())
-                .create(x, y, width, height, Component.literal(text),
-                        (btn, value) -> Ruler.setAreaMode(value));
-    }
-
     public static void drawModules(Minecraft mc, GuiGraphics gui, List<Module> modules) {
         int startY = 5;                // starting Y position for the first box
         int gap = 3;                   // pixels between boxes
@@ -100,7 +93,7 @@ public class Gui {
 
                 // vertically centered text
                 int textY = boxMinY + (boxHeight - mc.font.lineHeight) / 2;
-                drawString(mc, gui, m.getName(), 15, textY, 0xFFFFFFFF);
+                drawString(mc, gui, Component.literal(m.getName()), 15, textY, 0xFFFFFFFF);
 
                 // move down for next box
                 y += boxHeight + gap;

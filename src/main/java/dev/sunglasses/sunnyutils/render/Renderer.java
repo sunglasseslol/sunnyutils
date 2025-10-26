@@ -1,6 +1,9 @@
 package dev.sunglasses.sunnyutils.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
@@ -11,6 +14,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Renderer {
+    public static final RenderType SOLID_BOX = RenderType.create(
+            "solid_box",
+            1536, // buffer size (same as most built-ins)
+            false, // affectsCrumbling
+            true,  // sortOnUpload
+            RenderPipelines.DEBUG_QUADS, // the pipeline defines POSITION_COLOR
+            RenderType.CompositeState.builder()
+                    .setTextureState(RenderStateShard.NO_TEXTURE)
+                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
+                    .setOverlayState(RenderStateShard.NO_OVERLAY)
+                    .setLayeringState(RenderStateShard.NO_LAYERING)
+                    .setOutputState(RenderStateShard.MAIN_TARGET)
+                    .createCompositeState(false)
+    );
+
+
     public static void renderBox(VertexConsumer vc, Matrix4f mat, AABB box, float r, float g, float b, float a) {
         float x1 = (float) box.minX;
         float y1 = (float) box.minY;

@@ -30,21 +30,6 @@ public class Ruler extends ToggleModule {
         super("Ruler", GLFW.GLFW_KEY_K, "key.sunnyutils.modules");
     }
 
-    private static final RenderType HIGHLIGHT_BOX = RenderType.create(
-            "highlight_box",
-            1536, // buffer size (same as most built-ins)
-            false, // affectsCrumbling
-            true,  // sortOnUpload
-            RenderPipelines.DEBUG_QUADS, // the pipeline defines POSITION_COLOR
-            RenderType.CompositeState.builder()
-                    .setTextureState(RenderStateShard.NO_TEXTURE)
-                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
-                    .setOverlayState(RenderStateShard.NO_OVERLAY)
-                    .setLayeringState(RenderStateShard.NO_LAYERING)
-                    .setOutputState(RenderStateShard.MAIN_TARGET)
-                    .createCompositeState(false)
-    );
-
     private static BlockPos firstPos = null;
     private static BlockPos secondPos = null;
 
@@ -109,7 +94,7 @@ public class Ruler extends ToggleModule {
         poseStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        VertexConsumer consumer = bufferSource.getBuffer(HIGHLIGHT_BOX);
+        VertexConsumer consumer = bufferSource.getBuffer(Renderer.SOLID_BOX);
         Matrix4f mat = poseStack.last().pose();
 
         // Green = first point, Red = second point
@@ -125,7 +110,7 @@ public class Ruler extends ToggleModule {
         }
 
         poseStack.popPose();
-        bufferSource.endBatch(HIGHLIGHT_BOX);
+        bufferSource.endBatch(Renderer.SOLID_BOX);
     }
 
     @Override
@@ -139,7 +124,7 @@ public class Ruler extends ToggleModule {
         String text = count + " blocks";
 
         // Draw near top-left corner of screen
-        Gui.drawString(mc, guiGraphics, text, mc.getWindow().getGuiScaledWidth() - mc.font.width(text) - 5, 5, 0xFFFFFFFF);
+        Gui.drawString(mc, guiGraphics, Component.literal(text), mc.getWindow().getGuiScaledWidth() - mc.font.width(text) - 5, 5, 0xFFFFFFFF);
     }
 
     public static void renderHighlightBox(VertexConsumer vc, Matrix4f mat, BlockPos pos, float r, float g, float b, float a) {

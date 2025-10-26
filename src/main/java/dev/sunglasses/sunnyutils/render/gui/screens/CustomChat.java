@@ -9,19 +9,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 
-/*
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-TODO : CLEAN UP THIS SHITTY ASS FILE
-*/
-
 @EventBusSubscriber(modid = SunnyUtils.MODID)
 public class CustomChat {
 

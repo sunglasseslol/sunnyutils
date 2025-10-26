@@ -1,15 +1,9 @@
 package dev.sunglasses.sunnyutils.render.gui.screens;
 
-import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
-import dev.sunglasses.sunnyutils.render.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-
-/*
-WIP DOESNT EVEN DO ANYTHING YET 💔
-*/
 
 public class ConfigScreen extends Screen {
     private final Screen parent;
@@ -21,24 +15,14 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
+        if (this.minecraft == null) return;
         super.init();
-        int x = this.width / 2 - 100;
-        int y = this.height / 2 - 50;
+        int topRightX = this.minecraft.getWindow().getGuiScaledWidth() - 200 - 5;
+        int topRightY = this.minecraft.getWindow().getGuiScaledHeight() - 5;
 
         this.addRenderableWidget(Button.builder(Component.literal("Back"), b -> {
             this.minecraft.setScreen(parent);
-        }).pos(x, y + 70).size(200, 20).build());
-
-        this.addRenderableWidget(Gui.createCycleButton(
-                x, y, 100, 20,
-                "Area Mode",
-                (btn, value) -> {
-                    Ruler.setAreaMode(value);
-                    // Optional: save config or show message
-                },
-                Ruler.getAreaMode()
-        ));
-
+        }).pos(topRightX, topRightY).size(200, 20).build());
     }
 
     @Override
@@ -49,6 +33,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
+        if (this.minecraft == null) return;
         this.minecraft.setScreen(parent);
         super.onClose();
     }

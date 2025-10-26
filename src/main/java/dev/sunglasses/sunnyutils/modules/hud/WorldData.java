@@ -2,10 +2,12 @@ package dev.sunglasses.sunnyutils.modules.hud;
 
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.modules.base.GenericModule;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.*;
@@ -15,7 +17,7 @@ public class WorldData extends GenericModule {
         super("WorldData");
     }
 
-    private final List<String> displayLines = new ArrayList<>();
+    private final List<Component> displayLines = new ArrayList<>();
 
     @Override
     public void onTick() {
@@ -27,25 +29,26 @@ public class WorldData extends GenericModule {
         int playerY = (int) player.getY();
         int playerZ = (int) player.getZ();
 
-        String coordsText = String.format("XYZ: %d / %d / %d / ", playerX, playerY, playerZ) + player.getDirection();
+        Component xCoords = Component.literal(String.format("%d / ", playerX)).withStyle(ChatFormatting.GREEN);
+        Component yCoords = Component.literal(String.format("%d / ", playerY)).withStyle(ChatFormatting.GREEN);
+        Component zCoords = Component.literal(String.format("%d /", playerZ)).withStyle(ChatFormatting.GREEN);
+
+        Component coordsText = Component.literal("XYZ: ").append(xCoords).append(yCoords).append(zCoords).append(player.getDirection().toString());
+
 
         Holder<Biome> biomeHolder = mc.level.getBiome(player.blockPosition());
-        String biomeText = "biome/" + biomeHolder.unwrapKey()
-                .map(key -> key.location().toString())
-                .orElse("unknown");
+
+        Component biomeText = Component.literal("biome/").append(biomeHolder.unwrapKey().map(key -> key.location().toString())
+                .orElse("unknown")).withStyle(ChatFormatting.GREEN);
 
 
         long time = mc.level.getDayTime();
 
         int hours = (int) ((time / 1000 + 6) % 24); // +6 because MC day starts at 6 AM
         int minutes = (int) ((time % 1000) * 60 / 1000);
-        String formattedTime = String.format("Time: %02d:%02d", hours, minutes);
+        Component formattedTime = Component.literal("Time: ").append(String.format("%02d:%02d", hours, minutes)).withStyle(ChatFormatting.GREEN);
 
-        String fps = String.format("FPS: %d", mc.getFps());
-
-        String serverIp = null;
-        if(mc.getCurrentServer() != null) serverIp = mc.getCurrentServer().ip;
-        else if(mc.getCurrentServer() == null) serverIp = "unknown";
+        Component fps = Component.literal("FPS: ").append(String.format("%d", mc.getFps())).withStyle(ChatFormatting.GREEN);
 
         /* ---------------------------------------------------------------------------------- */
 
@@ -55,7 +58,6 @@ public class WorldData extends GenericModule {
         displayLines.add(biomeText);
         displayLines.add(formattedTime);
         displayLines.add(fps);
-        displayLines.add(serverIp);
 
 
         // reverse the list (so it's in the right order. coords then biome then time etc etc
@@ -68,7 +70,7 @@ public class WorldData extends GenericModule {
         if (mc.level != null && mc.player != null) {
             int offset = 10;
             int lineHeight = mc.font.lineHeight + 1;
-            for (String s : displayLines) {
+            for (Component s : displayLines) {
                 Gui.drawString(mc, guiGraphics, s, mc.getWindow().getGuiScaledWidth() - mc.font.width(s) - 5, mc.getWindow().getGuiScaledHeight() - offset, 0xFFFFFFFF);
                 offset += lineHeight;
             }
