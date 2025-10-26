@@ -3,16 +3,12 @@
   "minVersion": "0.8",
   "package": "dev.sunglasses.sunnyutils.mixin",
   "compatibilityLevel": "JAVA_21",
-  "refmap": "fullbright.refmap.json",
+  "refmap": "sunnyutils.refmap.json",
   "mixins": [
     "FullbrightMixin",
     "XRayMixin"
-  ],
-  "client": [
-    "UnitDoubleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   }
 }
-

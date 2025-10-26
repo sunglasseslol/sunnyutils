@@ -68,12 +68,9 @@ public class XRay extends ToggleModule {
         super("XRay", GLFW.GLFW_KEY_X, "key.sunnyutils.modules");
     }
 
-    private int tickCounter = 0;
-
     @Override
     public void onToggle() {
         Minecraft mc = Minecraft.getInstance();
-        tickCounter = 0;
 
         // Force chunk rebuild when toggling
         if (mc.level != null) {
@@ -84,21 +81,7 @@ public class XRay extends ToggleModule {
     @Override
     public void onTick() {
         if (!isEnabled()) return;
-
-        // Periodically refresh chunks to maintain XRay effect
-        tickCounter++;
-        if (tickCounter >= 40) { // Every 2 seconds (40 ticks)
-            tickCounter = 0;
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.level != null) {
-                // This keeps the XRay effect active
-                mc.levelRenderer.setSectionDirtyWithNeighbors(
-                        mc.player.blockPosition().getX() >> 4,
-                        mc.player.blockPosition().getY() >> 4,
-                        mc.player.blockPosition().getZ() >> 4
-                );
-            }
-        }
+        // bleh new logic
     }
 
     /**
@@ -106,26 +89,5 @@ public class XRay extends ToggleModule {
      */
     public static boolean shouldShowBlock(Block block) {
         return XRAY_BLOCKS.contains(block);
-    }
-
-    /**
-     * Add a block to the XRay list
-     */
-    public static void addBlock(Block block) {
-        XRAY_BLOCKS.add(block);
-    }
-
-    /**
-     * Remove a block from the XRay list
-     */
-    public static void removeBlock(Block block) {
-        XRAY_BLOCKS.remove(block);
-    }
-
-    /**
-     * Get all XRay blocks
-     */
-    public static Set<Block> getXRayBlocks() {
-        return XRAY_BLOCKS;
     }
 }
