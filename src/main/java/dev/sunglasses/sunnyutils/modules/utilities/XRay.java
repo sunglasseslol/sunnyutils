@@ -14,6 +14,10 @@ public class XRay extends ToggleModule {
     // Blocks that will be visible in XRay mode
     private static final Set<Block> XRAY_BLOCKS = new HashSet<>();
 
+
+    /*
+     block list
+    */
     static {
         // Ores
         XRAY_BLOCKS.add(Blocks.COAL_ORE);
