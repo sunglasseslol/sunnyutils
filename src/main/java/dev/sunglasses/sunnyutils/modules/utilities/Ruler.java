@@ -52,6 +52,7 @@ public class Ruler extends ToggleModule {
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
         if (!event.getEntity().level().isClientSide) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return; // <- important
 

@@ -1,33 +1,65 @@
 package dev.sunglasses.sunnyutils.render.gui.screens;
 
-import dev.sunglasses.sunnyutils.SunnyUtils;
-import dev.sunglasses.sunnyutils.render.gui.Config;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.XRayConfig;
+import dev.sunglasses.sunnyutils.utils.ButtonData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import java.util.List;
 
 public class ConfigScreen extends Screen {
     private final Screen parent;
-    private final Component title;
+    private final String title;
 
-    public ConfigScreen(Screen parent, Component title) {
-        super(title);
+    public ConfigScreen(Screen parent, String title) {
+        super(Component.literal(title));
         this.title = title;
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        if (this.minecraft == null) return;
         super.init();
-        this.addRenderableWidget(drawBackButton(this.minecraft));
+        if (this.minecraft == null) return;
 
-        this.addRenderableWidget(Gui.openScreenButton(this.width / 2, this.height / 2, 100, 20, "XRay", () -> new XRayConfig(this, Component.literal("XRay"))));
+        // --- Create the grid ---
+        GridLayout grid = new GridLayout();
+        grid.defaultCellSetting()
+                .padding(4)
+                .alignHorizontallyCenter()
+                .alignVerticallyMiddle();
+
+        GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
+
+        // Define your button data
+        List<ButtonData> buttons = List.of(
+                new ButtonData("XRay", () -> new XRayConfig(this, Component.literal("XRay"))),
+                new ButtonData("test", () -> new XRayConfig(this, Component.literal("XRay")))
+        );
+
+        // Add buttons to grid
+        for (ButtonData data : buttons) {
+            Button btn = Gui.openScreenButton(0, 0, data.name, data.screenSupplier);
+            rowHelper.addChild(btn);
+        }
+
+        // Add a Back button at the bottom
+
+        // --- Center the grid on the screen ---
+        grid.arrangeElements();
+        grid.setX(this.width / 5 - grid.getWidth() / 2);
+        grid.setY(100);
+
+        // --- Actually add to the screen ---
+        grid.visitWidgets(this::addRenderableWidget);
+
+        this.addRenderableWidget(drawBackButton(this.minecraft));
     }
+
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
@@ -42,11 +74,9 @@ public class ConfigScreen extends Screen {
     public void onClose() {
         if (this.minecraft == null) return;
         this.minecraft.setScreen(parent);
-        super.onClose();
     }
 
     public Button drawBackButton(Minecraft mc) {
         return Gui.createButton(mc.getWindow().getGuiScaledWidth() - 100 - 5, 5, 100, 20, "Back", (btn) -> this.onClose());
     }
 }
-

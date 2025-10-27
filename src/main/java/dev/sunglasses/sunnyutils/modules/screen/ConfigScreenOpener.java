@@ -14,6 +14,6 @@ public class ConfigScreenOpener extends ButtonModule {
     @Override
     public void onPress() {
         Minecraft mc = Minecraft.getInstance();
-        mc.setScreen(new ConfigScreen(null, Component.literal("Configuration")));
+        mc.setScreen(new ConfigScreen(null, "Configuration"));
     }
 }

@@ -35,6 +35,7 @@ public class Gui {
         gui.drawString(mc.font, text, x, y, colour);
     }
 
+
     public static void renderTextOverlay(PoseStack poseStack, Component text, double x, double y, double z) {
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
@@ -74,6 +75,11 @@ public class Gui {
 
     public static Button createButton(int x, int y, int width, int height, String text, Button.OnPress onPress) {
         return Button.builder(Component.literal(text), onPress).bounds(x, y, width, height).build();
+    }
+
+    public static Button openScreenButton(int x, int y, String name, Supplier<Screen> screenSupplier) {
+        Minecraft mc = Minecraft.getInstance();
+        return createButton(x, y, 100, 20, name, (btn) -> mc.setScreen(screenSupplier.get()));
     }
 
     public static Button openScreenButton(int x, int y, int width, int height, String name, Supplier<Screen> screenSupplier) {

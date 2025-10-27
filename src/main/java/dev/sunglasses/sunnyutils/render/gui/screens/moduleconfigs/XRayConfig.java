@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 
 public class XRayConfig extends ConfigScreen {
     public XRayConfig(Screen parent, Component title) {
-        super(new ConfigScreen(null, Component.literal("Configuration")), Component.literal("XRay"));
+        super(new ConfigScreen(null, "Configuration"), "XRay");
     }
 
     @Override

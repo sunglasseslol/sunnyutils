@@ -36,7 +36,6 @@ public class SunnyUtils {
         new ChunkBorders();
         new DurabilityNotifier();
         new ConfigScreenOpener();
-        new UtilityScreenOpener();
         new Ruler();
         new Scaffold();
         new XRay();
