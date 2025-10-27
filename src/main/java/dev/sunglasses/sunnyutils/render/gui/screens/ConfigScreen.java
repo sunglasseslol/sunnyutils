@@ -1,6 +1,12 @@
 package dev.sunglasses.sunnyutils.render.gui.screens;
 
+import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
+import dev.sunglasses.sunnyutils.modules.screen.*;
+import dev.sunglasses.sunnyutils.modules.hud.*;
+import dev.sunglasses.sunnyutils.modules.utilities.*;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
+import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.RulerConfig;
+import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.ScaffoldConfig;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.XRayConfig;
 import dev.sunglasses.sunnyutils.utils.ButtonData;
 import net.minecraft.client.Minecraft;
@@ -25,6 +31,7 @@ public class ConfigScreen extends Screen {
     protected void init() {
         super.init();
         if (this.minecraft == null) return;
+        ModuleManager mm = ModuleManager.get();
 
         // --- Create the grid ---
         GridLayout grid = new GridLayout();
@@ -37,8 +44,9 @@ public class ConfigScreen extends Screen {
 
         // Define your button data
         List<ButtonData> buttons = List.of(
-                new ButtonData("XRay", () -> new XRayConfig(this, Component.literal("XRay"))),
-                new ButtonData("test", () -> new XRayConfig(this, Component.literal("XRay")))
+                new ButtonData(mm.getModule(XRay.class).getName(), () -> new XRayConfig()),
+                new ButtonData(mm.getModule(Ruler.class).getName(), () -> new RulerConfig()),
+                new ButtonData(mm.getModule(Scaffold.class).getName(), () -> new ScaffoldConfig())
         );
 
         // Add buttons to grid

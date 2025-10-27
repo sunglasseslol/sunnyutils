@@ -5,6 +5,11 @@ import java.util.List;
 
 public class ModuleManager {
     private static final List<Module> modules = new ArrayList<>();
+    private static ModuleManager mm;
+
+    public ModuleManager() {
+        mm = this;
+    }
 
     public static void register(Module module) {
         for (Module m : modules) {
@@ -17,12 +22,9 @@ public class ModuleManager {
         System.out.println("Registering module: " + module.getName() + " -> " + module + " | list size: " + modules.size());
     }
 
-    public static void registerAll(List<Module> moduleList) {
-        for (Module m : moduleList) {
-            register(m);
-        }
+    public static ModuleManager get() {
+        return mm;
     }
-
 
     public static List<Module> getModules() {
         return modules;

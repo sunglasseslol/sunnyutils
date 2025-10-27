@@ -2,6 +2,7 @@ package dev.sunglasses.sunnyutils.modules.base;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.GuiGraphics;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Module {
     private final String name;
