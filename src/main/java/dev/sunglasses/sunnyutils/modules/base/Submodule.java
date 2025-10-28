@@ -5,7 +5,7 @@ import net.minecraft.client.KeyMapping;
 public abstract class Submodule extends Module {
     private static ToggleModule parentModule;
 
-    public Submodule(String name, int defaultKey, String category, ToggleModule parentModule) {
+    public Submodule(String name, int defaultKey, KeyMapping.Category category, ToggleModule parentModule) {
         super(name);
         Submodule.parentModule = parentModule;
         setKeyMapping(new KeyMapping(

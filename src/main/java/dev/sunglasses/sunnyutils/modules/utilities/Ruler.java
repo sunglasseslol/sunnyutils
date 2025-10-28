@@ -7,6 +7,7 @@ import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import dev.sunglasses.sunnyutils.render.Renderer;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
+import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import dev.sunglasses.sunnyutils.utils.MathUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,7 @@ import org.lwjgl.glfw.GLFW;
 @EventBusSubscriber(modid = SunnyUtils.MODID)
 public class Ruler extends ToggleModule {
     public Ruler() {
-        super("Ruler", GLFW.GLFW_KEY_K, "key.sunnyutils.modules");
+        super("Ruler", GLFW.GLFW_KEY_K, KeyMappingManager.MAIN_CATEGORY);
     }
 
     private static BlockPos firstPos = null;
@@ -53,7 +54,7 @@ public class Ruler extends ToggleModule {
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
-        if (!event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return; // <- important
 
         long time = System.currentTimeMillis();

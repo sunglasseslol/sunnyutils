@@ -6,6 +6,7 @@ import dev.sunglasses.sunnyutils.SunnyUtils;
 import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import dev.sunglasses.sunnyutils.render.Renderer;
+import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -77,7 +78,7 @@ public class XRay extends ToggleModule {
     private static BlockPos lastPlayerChunk = null;
 
     public XRay() {
-        super("XRay", GLFW.GLFW_KEY_X, "key.sunnyutils.modules");
+        super("XRay", GLFW.GLFW_KEY_X, KeyMappingManager.MAIN_CATEGORY);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class XRay extends ToggleModule {
 
         // Render cached ores
         PoseStack poseStack = event.getPoseStack();
-        Camera camera = event.getCamera();
+        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         Vec3 camPos = camera.getPosition();
 
         poseStack.pushPose();

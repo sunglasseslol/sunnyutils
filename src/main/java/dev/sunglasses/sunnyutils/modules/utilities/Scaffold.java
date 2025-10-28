@@ -1,6 +1,7 @@
 package dev.sunglasses.sunnyutils.modules.utilities;
 
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
+import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 public class Scaffold extends ToggleModule {
 
     public Scaffold() {
-        super("Scaffold", GLFW.GLFW_KEY_V, "key.sunnyutils.modules");
+        super("Scaffold", GLFW.GLFW_KEY_V, KeyMappingManager.MAIN_CATEGORY);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Scaffold extends ToggleModule {
             BlockState neighborState = level.getBlockState(neighbor);
 
             // Check if this neighbor is a solid block we can place against
-            if (!neighborState.isAir() && neighborState.isSolid()) {
+            if (!neighborState.isAir() && neighborState.isSolidRender()) {
                 Direction opposite = dir.getOpposite();
 
                 // Calculate hit position on the neighbor block

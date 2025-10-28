@@ -1,12 +1,13 @@
 package dev.sunglasses.sunnyutils.modules.utilities;
 
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
+import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
 public class Fullbright extends ToggleModule {
     public Fullbright() {
-        super("Fullbright", GLFW.GLFW_KEY_G, "key.sunnyutils.modules");
+        super("Fullbright", GLFW.GLFW_KEY_G, KeyMappingManager.MAIN_CATEGORY);
     }
 
     @Override
