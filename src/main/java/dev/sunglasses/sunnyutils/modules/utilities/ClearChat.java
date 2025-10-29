@@ -1,9 +1,9 @@
 package dev.sunglasses.sunnyutils.modules.utilities;
 
 import dev.sunglasses.sunnyutils.modules.base.ButtonModule;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-import net.minecraft.client.Minecraft;
 
 public class ClearChat extends ButtonModule {
 

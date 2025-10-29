@@ -1,9 +1,8 @@
 package dev.sunglasses.sunnyutils.modules.screen;
 
-import dev.sunglasses.sunnyutils.render.gui.screens.ConfigScreen;
 import dev.sunglasses.sunnyutils.modules.base.ButtonModule;
+import dev.sunglasses.sunnyutils.render.gui.screens.ConfigScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ConfigScreenOpener extends ButtonModule {

@@ -1,24 +1,25 @@
 package dev.sunglasses.sunnyutils;
 
 import com.mojang.logging.LogUtils;
+import dev.sunglasses.sunnyutils.modules.base.Module;
+import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
+import dev.sunglasses.sunnyutils.modules.hud.DurabilityNotifier;
+import dev.sunglasses.sunnyutils.modules.hud.WorldData;
+import dev.sunglasses.sunnyutils.modules.screen.ConfigScreenOpener;
+import dev.sunglasses.sunnyutils.modules.utilities.*;
 import dev.sunglasses.sunnyutils.modules.utilities.submodules.RulerAreaToggle;
 import dev.sunglasses.sunnyutils.modules.utilities.submodules.RulerClear;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
-import dev.sunglasses.sunnyutils.modules.base.*;
-import dev.sunglasses.sunnyutils.modules.base.Module;
-import dev.sunglasses.sunnyutils.modules.hud.*;
-import dev.sunglasses.sunnyutils.modules.screen.*;
-import dev.sunglasses.sunnyutils.modules.utilities.*;
 import dev.sunglasses.sunnyutils.utils.KeyMappingManager;
 import dev.sunglasses.sunnyutils.utils.RainbowText;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
@@ -39,6 +40,7 @@ public class SunnyUtils {
         new Ruler();
         new Scaffold();
         new XRay();
+        new ShowChat();
 
         // register submodules
         new RulerAreaToggle();

@@ -1,9 +1,9 @@
 package dev.sunglasses.sunnyutils.render.gui.screens;
 
 import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
-import dev.sunglasses.sunnyutils.modules.screen.*;
-import dev.sunglasses.sunnyutils.modules.hud.*;
-import dev.sunglasses.sunnyutils.modules.utilities.*;
+import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
+import dev.sunglasses.sunnyutils.modules.utilities.Scaffold;
+import dev.sunglasses.sunnyutils.modules.utilities.XRay;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.RulerConfig;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.ScaffoldConfig;
@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
 import java.util.List;
 
 public class ConfigScreen extends Screen {

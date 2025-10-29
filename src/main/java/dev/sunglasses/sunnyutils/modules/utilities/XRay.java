@@ -9,9 +9,6 @@ import dev.sunglasses.sunnyutils.render.Renderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -23,7 +20,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @EventBusSubscriber(modid = SunnyUtils.MODID)
 public class XRay extends ToggleModule {

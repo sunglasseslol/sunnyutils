@@ -1,6 +1,7 @@
 package dev.sunglasses.sunnyutils.utils;
 
 import net.minecraft.client.gui.screens.Screen;
+
 import java.util.function.Supplier;
 
 public class ButtonData {

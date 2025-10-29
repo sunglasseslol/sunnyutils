@@ -6,7 +6,8 @@
   "refmap": "sunnyutils.refmap.json",
   "mixins": [
     "FullbrightMixin",
-    "XRayMixin"
+    "XRayMixin",
+    "ShowChatMixin"
   ],
   "injectors": {
     "defaultRequire": 1

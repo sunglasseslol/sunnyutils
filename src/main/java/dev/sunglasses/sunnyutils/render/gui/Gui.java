@@ -2,15 +2,13 @@ package dev.sunglasses.sunnyutils.render.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.sunglasses.sunnyutils.SunnyUtils;
+import dev.sunglasses.sunnyutils.modules.base.Module;
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
-import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import dev.sunglasses.sunnyutils.modules.base.Module;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;

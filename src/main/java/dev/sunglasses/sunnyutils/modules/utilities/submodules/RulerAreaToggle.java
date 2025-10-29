@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 public class RulerAreaToggle extends Submodule {
 
     public RulerAreaToggle() {
-        super("RulerAreaToggle", GLFW.GLFW_KEY_X, "key.sunnyutils.modules", ModuleManager.getModule(Ruler.class));
+        super("RulerAreaToggle", GLFW.GLFW_KEY_Z, "key.sunnyutils.modules", ModuleManager.getModule(Ruler.class));
     }
 
     @Override

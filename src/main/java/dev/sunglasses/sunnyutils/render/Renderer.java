@@ -1,6 +1,7 @@
 package dev.sunglasses.sunnyutils.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.sunglasses.sunnyutils.utils.MathUtils;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -8,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
-import dev.sunglasses.sunnyutils.utils.MathUtils;
 
 import java.util.HashSet;
 import java.util.Set;
