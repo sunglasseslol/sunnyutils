@@ -80,11 +80,6 @@ public class Gui {
         return createButton(x, y, 100, 20, name, (btn) -> mc.setScreen(screenSupplier.get()));
     }
 
-    public static Button openScreenButton(int x, int y, int width, int height, String name, Supplier<Screen> screenSupplier) {
-        Minecraft mc = Minecraft.getInstance();
-        return createButton(x, y, width, height, name, (btn) -> mc.setScreen(screenSupplier.get()));
-    }
-
     public static void drawModules(Minecraft mc, GuiGraphics gui, List<Module> modules) {
         int startY = 5;                // starting Y position for the first box
         int gap = 3;                   // pixels between boxes

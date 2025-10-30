@@ -1,10 +1,11 @@
 package dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs;
 
-import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.modules.utilities.XRay;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.render.gui.screens.ConfigScreen;
 import dev.sunglasses.sunnyutils.utils.ButtonData;
+import dev.sunglasses.sunnyutils.utils.ScreenButtonData;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -22,7 +23,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 public class XRayConfig extends ConfigScreen {
+    // Settings sliders
+    private OptionInstance<Integer> scanDelayOption;
+    private OptionInstance<Integer> chunkRadiusOption;
+    private OptionInstance<Integer> renderDistanceOption;
+
     public XRayConfig() {
         super(new ConfigScreen(null, "Configuration"), "XRay");
     }
@@ -30,46 +37,150 @@ public class XRayConfig extends ConfigScreen {
     @Override
     protected void init() {
         if (this.minecraft == null) return;
-        //
-        ModuleManager mm = ModuleManager.get();
 
-        // --- Create the grid ---
-        GridLayout grid = new GridLayout();
-        grid.defaultCellSetting()
-                .padding(4)
-                .alignHorizontallyCenter()
-                .alignVerticallyMiddle();
+        // Calculate panel positions
+        int leftPanelX = 20;
+        int rightPanelX = this.width / 2 + 20;
+        int startY = 50;
+        int panelWidth = (this.width / 2) - 40;
 
-        GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
+        // ===== LEFT PANEL: Sub-menus using GridLayout =====
+        GridLayout leftGrid = new GridLayout();
+        leftGrid.defaultCellSetting()
+                .padding(2)
+                .alignHorizontallyCenter();
 
-        // Define your button data
-        List<ButtonData> buttons = List.of(
-                new ButtonData(mm.getModule(XRay.class).getName(), () -> new BlockWhitelistScreen(this))
+        GridLayout.RowHelper leftRows = leftGrid.createRowHelper(1); // 1 column
+
+        List<ScreenButtonData> screenButtons = List.of(
+                new ScreenButtonData("BlockList", () -> new BlockWhitelistScreen(this))
         );
 
-        // Add buttons to grid
-        for (ButtonData data : buttons) {
+        for(ScreenButtonData data : screenButtons) {
             Button btn = Gui.openScreenButton(0, 0, data.name, data.screenSupplier);
-            rowHelper.addChild(btn);
+            leftRows.addChild(btn);
         }
 
-        // Add a Back button at the bottom
+        // Position and add left grid
+        leftGrid.arrangeElements();
+        leftGrid.setX(leftPanelX);
+        leftGrid.setY(startY);
+        leftGrid.visitWidgets(this::addRenderableWidget);
 
-        // --- Center the grid on the screen ---
-        grid.arrangeElements();
-        grid.setX(this.width / 5 - grid.getWidth() / 2);
-        grid.setY(100);
+        // ===== RIGHT PANEL: Settings using GridLayout =====
+        GridLayout rightGrid = new GridLayout();
+        rightGrid.defaultCellSetting()
+                .padding(2)
+                .alignHorizontallyCenter();
 
-        // --- Actually add to the screen ---
-        grid.visitWidgets(this::addRenderableWidget);
+        GridLayout.RowHelper rightRows = rightGrid.createRowHelper(1); // 1 column
 
-        //
+        // Create slider options
+        this.scanDelayOption = new OptionInstance<>(
+                "xray.scanDelay",
+                OptionInstance.noTooltip(),
+                (component, value) -> Component.literal("Scan Delay: " + value + " ticks (" + String.format("%.1f", value / 20.0) + "s)"),
+                new OptionInstance.IntRange(10, 100),
+                XRay.getScanDelay(),
+                (newValue) -> XRay.setScanDelay(newValue)
+        );
+
+        this.chunkRadiusOption = new OptionInstance<>(
+                "xray.chunkRadius",
+                OptionInstance.noTooltip(),
+                (component, value) -> Component.literal("Chunk Radius: " + value),
+                new OptionInstance.IntRange(1, 8),
+                XRay.getChunkRadius(),
+                (newValue) -> XRay.setChunkRadius(newValue)
+        );
+
+        this.renderDistanceOption = new OptionInstance<>(
+                "xray.renderDistance",
+                OptionInstance.noTooltip(),
+                (component, value) -> Component.literal("Render Distance: " + value),
+                new OptionInstance.IntRange(16, 128),
+                XRay.getRenderDistance(),
+                (newValue) -> XRay.setRenderDistance(newValue)
+        );
+
+        // Add sliders to grid
+        rightRows.addChild(scanDelayOption.createButton(
+                this.minecraft.options,
+                0, 0,
+                panelWidth
+        ));
+
+        rightRows.addChild(chunkRadiusOption.createButton(
+                this.minecraft.options,
+                0, 0,
+                panelWidth
+        ));
+
+        rightRows.addChild(renderDistanceOption.createButton(
+                this.minecraft.options,
+                0, 0,
+                panelWidth
+        ));
+
+        // Add toggle buttons using Gui.createButton
+        rightRows.addChild(Gui.createButton(
+                0, 0, panelWidth, 20,
+                "Show Chests: ON",
+                button -> {
+                    // TODO: Toggle chests
+                    button.setMessage(Component.literal("Show Chests: OFF"));
+                }
+        ));
+
+        rightRows.addChild(Gui.createButton(
+                0, 0, panelWidth, 20,
+                "Show Spawners: ON",
+                button -> {
+                    // TODO: Toggle spawners
+                    button.setMessage(Component.literal("Show Spawners: OFF"));
+                }
+        ));
+
+        // Position and add right grid
+        rightGrid.arrangeElements();
+        rightGrid.setX(rightPanelX);
+        rightGrid.setY(startY);
+        rightGrid.visitWidgets(this::addRenderableWidget);
+
+        // ===== BOTTOM: Back Button =====
         this.addRenderableWidget(drawBackButton(this.minecraft));
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (this.minecraft == null) return;
+
+        // Render background
+        this.renderMenuBackground(graphics);
+
+        // Draw main title at top
+        graphics.drawCenteredString(this.font, this.getTitle(), this.width / 2, 15, 0xFFFFFF);
+
+        // Draw vertical divider line
+        int dividerX = this.width / 2;
+        graphics.fill(dividerX - 1, 40, dividerX + 1, this.height - 40, 0xFF404040);
+
+        // Draw panel titles
+        graphics.drawCenteredString(this.font, "Sub-Menus", this.width / 4, 35, 0xFFFF55);
+        graphics.drawCenteredString(this.font, "Settings", dividerX + this.width / 4, 35, 0xFFFF55);
+
+        // Draw setting descriptions
+        int rightPanelX = this.width / 2 + 20;
+        int descX = rightPanelX + 5;
+
+        // Only draw descriptions if there's space
+        if (this.width > 600) {
+            graphics.drawString(this.font, "How often to scan", descX, 73, 0x808080);
+            graphics.drawString(this.font, "Area to scan", descX, 98, 0x808080);
+            graphics.drawString(this.font, "Max render distance", descX, 123, 0x808080);
+        }
+
+        // Render all widgets
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 }

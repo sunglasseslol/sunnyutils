@@ -9,6 +9,7 @@ import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.RulerConfig;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.ScaffoldConfig;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.XRayConfig;
 import dev.sunglasses.sunnyutils.utils.ButtonData;
+import dev.sunglasses.sunnyutils.utils.ScreenButtonData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -44,14 +45,14 @@ public class ConfigScreen extends Screen {
         GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
         // Define your button data
-        List<ButtonData> buttons = List.of(
-                new ButtonData(mm.getModule(XRay.class).getName(), () -> new XRayConfig()),
-                new ButtonData(mm.getModule(Ruler.class).getName(), () -> new RulerConfig()),
-                new ButtonData(mm.getModule(Scaffold.class).getName(), () -> new ScaffoldConfig())
+        List<ScreenButtonData> buttons = List.of(
+                new ScreenButtonData(mm.getModule(XRay.class).getName(), () -> new XRayConfig()),
+                new ScreenButtonData(mm.getModule(Ruler.class).getName(), () -> new RulerConfig()),
+                new ScreenButtonData(mm.getModule(Scaffold.class).getName(), () -> new ScaffoldConfig())
         );
 
         // Add buttons to grid
-        for (ButtonData data : buttons) {
+        for (ScreenButtonData data : buttons) {
             Button btn = Gui.openScreenButton(0, 0, data.name, data.screenSupplier);
             rowHelper.addChild(btn);
         }

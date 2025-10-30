@@ -9,6 +9,7 @@ import dev.sunglasses.sunnyutils.render.Renderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,8 +22,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @EventBusSubscriber(modid = SunnyUtils.MODID)
 public class XRay extends ToggleModule {
@@ -35,8 +35,9 @@ public class XRay extends ToggleModule {
         XRAY_BLOCKS.put(Blocks.DIAMOND_ORE, new float[]{0.0f, 1.0f, 1.0f, 0.8f});
         XRAY_BLOCKS.put(Blocks.DEEPSLATE_DIAMOND_ORE, new float[]{0.0f, 1.0f, 1.0f, 0.8f});
 
+        // Diamonds - Cyan
         XRAY_BLOCKS.put(Blocks.COAL_ORE, new float[]{0.0f, 0.0f, 0.0f, 0.8f});
-        XRAY_BLOCKS.put(Blocks.DEEPSLATE_COAL_ORE, new float[]{0.0f, 0.0f, 10.0f, 0.8f});
+        XRAY_BLOCKS.put(Blocks.DEEPSLATE_COAL_ORE, new float[]{0.0f, 0.0f, 0.0f, 0.8f});
 
         // Emeralds - Green
         XRAY_BLOCKS.put(Blocks.EMERALD_ORE, new float[]{0.0f, 1.0f, 0.0f, 0.8f});
@@ -75,14 +76,29 @@ public class XRay extends ToggleModule {
     private static int scanTicker = 0;
     private static BlockPos lastPlayerChunk = null;
 
+    // Configurable settings
+    private static int scanDelay = 40; // ticks between scans (default 2 seconds)
+    private static int chunkRadius = 3; // chunks to scan around player
+    private static int renderDistance = 64; // max blocks to render ores
+
     public XRay() {
         super("XRay", GLFW.GLFW_KEY_X, "key.sunnyutils.modules");
     }
 
+    // Getters and setters for configuration
+    public static int getScanDelay() { return scanDelay; }
+    public static void setScanDelay(int delay) { scanDelay = Math.max(10, Math.min(200, delay)); }
+
+    public static int getChunkRadius() { return chunkRadius; }
+    public static void setChunkRadius(int radius) { chunkRadius = Math.max(1, Math.min(10, radius)); }
+
+    public static int getRenderDistance() { return renderDistance; }
+    public static void setRenderDistance(int distance) { renderDistance = Math.max(16, Math.min(256, distance)); }
+
     @Override
     public void onToggle() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null) {
+        if (mc.level != null && mc.levelRenderer != null) {
             mc.levelRenderer.allChanged();
         }
         oreCache.clear();
@@ -91,6 +107,7 @@ public class XRay extends ToggleModule {
 
     @SubscribeEvent
     public static void onRenderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
+
         Minecraft mc = Minecraft.getInstance();
         XRay xray = ModuleManager.getModule(XRay.class);
         if (mc.level == null || mc.player == null || xray == null || !xray.isEnabled()) return;
@@ -100,7 +117,7 @@ public class XRay extends ToggleModule {
 
         // Rescan every 40 ticks (2 seconds) or if player moved to new chunk
         scanTicker++;
-        if (scanTicker >= 80 || !playerChunk.equals(lastPlayerChunk)) {
+        if (scanTicker >= getScanDelay() || !playerChunk.equals(lastPlayerChunk)) {
             scanTicker = 0;
             lastPlayerChunk = playerChunk;
             scanForOres(mc, playerPos);
@@ -119,7 +136,7 @@ public class XRay extends ToggleModule {
         Matrix4f matrix = poseStack.last().pose();
 
         // Only render ores within render distance
-        double maxDistSq = 64 * 64; // 64 block radius
+        double maxDistSq = Math.pow(getRenderDistance(), 2);
         for (Map.Entry<BlockPos, float[]> entry : oreCache.entrySet()) {
             if (entry.getKey().distSqr(playerPos) > maxDistSq) continue;
 
@@ -135,8 +152,7 @@ public class XRay extends ToggleModule {
     private static void scanForOres(Minecraft mc, BlockPos playerPos) {
         oreCache.clear();
 
-        int chunkRadius = 4; // Reduced to 3 chunks (7x7 chunk area)
-        if (mc.level == null) return;
+        int chunkRadius = getChunkRadius(); // Reduced to 3 chunks (7x7 chunk area)
         int minY = Math.max(mc.level.getMinY(), playerPos.getY() - 64); // Only scan 64 blocks below
         int maxY = Math.min(mc.level.getMaxY(), playerPos.getY() + 64); // Only scan 64 blocks above
 
@@ -146,6 +162,7 @@ public class XRay extends ToggleModule {
                 int worldChunkZ = (playerPos.getZ() >> 4) + chunkZ;
 
                 LevelChunk chunk = mc.level.getChunk(worldChunkX, worldChunkZ);
+                if (chunk == null) continue;
 
                 // Scan blocks in chunk - sample every 2nd block for speed
                 BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
@@ -165,5 +182,9 @@ public class XRay extends ToggleModule {
                 }
             }
         }
+    }
+
+    public static boolean shouldShowBlock(Block block) {
+        return XRAY_BLOCKS.containsKey(block);
     }
 }
