@@ -200,7 +200,8 @@ class BlockWhitelistScreen extends ConfigScreen {
         this.parent = parent;
 
         // Load current whitelist from XRay module
-        // (You'll need to add a getter method to XRay)
+        whitelistedBlocks.addAll(XRay.getWhitelistedBlocks());
+        System.out.println("Loaded " + whitelistedBlocks.size() + " blocks into whitelist screen");
     }
 
     @Override
@@ -224,15 +225,16 @@ class BlockWhitelistScreen extends ConfigScreen {
         });
         this.addRenderableWidget(this.searchBox);
 
-        // Block list (scrollable)
+        // Block list - DON'T add as renderable widget, we'll render it manually
+        // This prevents it from capturing clicks meant for buttons
         this.blockList = new BlockList(
                 this.minecraft,
                 this.width,
-                this.height - 96, // Height
-                50, // Top
-                36  // Item height
+                this.height - 80, // height stops before buttons
+                45, // Top
+                20  // Item height (THIS is what makes each entry 20px tall!)
         );
-        this.addRenderableWidget(this.blockList);
+        // NOTE: NOT calling addRenderableWidget for the list!
 
         // Add button
         this.addButton = Button.builder(
@@ -248,7 +250,7 @@ class BlockWhitelistScreen extends ConfigScreen {
         ).bounds(this.width / 2 + 4, this.height - 52, 150, 20).build();
         this.addRenderableWidget(this.removeButton);
 
-        // Back button
+        // Done button
         this.addRenderableWidget(Button.builder(
                 Component.literal("Done"),
                 button -> {
@@ -260,20 +262,58 @@ class BlockWhitelistScreen extends ConfigScreen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Render background
         this.renderMenuBackground(guiGraphics);
 
-        // Render the list
-        this.blockList.render(guiGraphics, mouseX, mouseY, partialTick);
-
-        // Draw title
+        // Draw title BEFORE list
         guiGraphics.drawCenteredString(this.font, "BlockWhitelist", this.width / 2, 8, 0xFFFFFF);
 
         // Draw instructions
         guiGraphics.drawString(this.font, "Whitelisted: " + whitelistedBlocks.size(),
-                10, this.height - 52, 0xAAAAAA);
+                10, this.height - 60, 0xAAAAAA);
 
-        // Render widgets (search box, buttons)
+        // Show how many entries we have
+        guiGraphics.drawString(this.font, "Entries: " + this.blockList.children().size(),
+                10, this.height - 70, 0xFFFFFF);
+
+        // Render the list manually
+        this.blockList.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        // Render all other widgets (buttons, search box) with proper event handling
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // Let buttons and widgets handle clicks first (they're on top)
+        if (super.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        // Only if no widget handled it, let the list handle the click
+        if (this.blockList.isMouseOver(mouseX, mouseY)) {
+            return this.blockList.mouseClicked(mouseX, mouseY, button);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        // Let the list handle scroll dragging
+        if (this.blockList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        // Let the list handle scrolling
+        if (this.blockList.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     private void addSelectedBlock() {
@@ -294,7 +334,9 @@ class BlockWhitelistScreen extends ConfigScreen {
 
     private void saveWhitelist() {
         // Save to XRay module
-        // XRay.setWhitelistedBlocks(whitelistedBlocks);
+        XRay.setWhitelistedBlocks(whitelistedBlocks);
+        XRay.saveWhitelist();
+        System.out.println("Saved whitelist with " + whitelistedBlocks.size() + " blocks");
     }
 
     @Override
@@ -309,15 +351,17 @@ class BlockWhitelistScreen extends ConfigScreen {
         private String filterText = "";
         private final List<BlockEntry> allEntries = new ArrayList<>();
 
-        public BlockList(net.minecraft.client.Minecraft mc, int width, int height, int y, int itemHeight) {
-            super(mc, width, height, y, itemHeight);
+        public BlockList(net.minecraft.client.Minecraft mc, int width, int height, int top, int itemHeight) {
+            // ObjectSelectionList constructor: (Minecraft, width, height, top, itemHeight)
+            super(mc, width, height, top, itemHeight);
 
             // Add all blocks from registry
             for (Block block : BuiltInRegistries.BLOCK) {
-                if (block == Blocks.AIR) continue; // Skip air
+                if (block == Blocks.AIR) continue;
                 allEntries.add(new BlockEntry(block));
             }
 
+            System.out.println("BlockList initialized with " + allEntries.size() + " blocks");
             updateFilter("");
         }
 
@@ -331,6 +375,8 @@ class BlockWhitelistScreen extends ConfigScreen {
                     this.addEntry(entry);
                 }
             }
+
+            System.out.println("Filter '" + text + "' resulted in " + this.children().size() + " blocks");
         }
 
         public void updateWhitelist() {
@@ -340,7 +386,12 @@ class BlockWhitelistScreen extends ConfigScreen {
 
         @Override
         public int getRowWidth() {
-            return 300;
+            return this.width - 50;
+        }
+
+        @Override
+        public int getRowLeft() {
+            return this.getX() + this.width / 2 - getRowWidth() / 2;
         }
 
         /**
@@ -356,29 +407,53 @@ class BlockWhitelistScreen extends ConfigScreen {
             @Override
             public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height,
                                int mouseX, int mouseY, boolean isHovered, float partialTick) {
+
                 ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
                 String blockName = blockId.toString();
 
-                // Different color if whitelisted
-                int color = whitelistedBlocks.contains(block) ? 0x00FF00 : 0xFFFFFF;
+                // Check if mouse is actually over any button
+                boolean isOverButton = false;
+                if (BlockWhitelistScreen.this.addButton.isMouseOver(mouseX, mouseY) ||
+                        BlockWhitelistScreen.this.removeButton.isMouseOver(mouseX, mouseY)) {
+                    isOverButton = true;
+                }
 
-                // Draw block name
+                // Also check the Done button
+                for (net.minecraft.client.gui.components.Renderable renderable : BlockWhitelistScreen.this.renderables) {
+                    if (renderable instanceof Button btn && btn.isMouseOver(mouseX, mouseY)) {
+                        isOverButton = true;
+                        break;
+                    }
+                }
+
+                boolean shouldHighlight = isHovered && !isOverButton;
+
+                // Different background if whitelisted or hovered
+                if (whitelistedBlocks.contains(block)) {
+                    guiGraphics.fill(left, top, left + width, top + height, 0x8000FF00); // Semi-transparent green for whitelisted
+                } else if (shouldHighlight) {
+                    guiGraphics.fill(left, top, left + width, top + height, 0x80FFFFFF); // Semi-transparent white for hover
+                } else {
+                    guiGraphics.fill(left, top, left + width, top + height, 0x40000000); // Semi-transparent black background
+                }
+
+                // Draw block name - WHITE text
                 guiGraphics.drawString(
                         BlockWhitelistScreen.this.font,
                         blockName,
                         left + 5,
-                        top + 2,
-                        color
+                        top + (height - BlockWhitelistScreen.this.font.lineHeight) / 2,
+                        0xFFFFFFFF  // WHITE text
                 );
 
-                // Draw status
+                // Draw status checkmark if whitelisted
                 if (whitelistedBlocks.contains(block)) {
                     guiGraphics.drawString(
                             BlockWhitelistScreen.this.font,
                             "✓",
                             left + width - 20,
-                            top + 2,
-                            0x00FF00
+                            top + (height - BlockWhitelistScreen.this.font.lineHeight) / 2,
+                            0xFF00FF00  // Bright green checkmark
                     );
                 }
             }
