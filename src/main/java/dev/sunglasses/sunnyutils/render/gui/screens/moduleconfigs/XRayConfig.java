@@ -1,9 +1,8 @@
 package dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs;
 
-import dev.sunglasses.sunnyutils.modules.utilities.XRay;
+import dev.sunglasses.sunnyutils.modules.world.XRay;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.render.gui.screens.ConfigScreen;
-import dev.sunglasses.sunnyutils.utils.ButtonData;
 import dev.sunglasses.sunnyutils.utils.ScreenButtonData;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
@@ -333,10 +332,13 @@ class BlockWhitelistScreen extends ConfigScreen {
     }
 
     private void saveWhitelist() {
-        // Save to XRay module
+        // Save to XRay module and config file
         XRay.setWhitelistedBlocks(whitelistedBlocks);
         XRay.saveWhitelist();
         System.out.println("Saved whitelist with " + whitelistedBlocks.size() + " blocks");
+
+        // No need to reload chunks - the ore cache will be refreshed automatically
+        // on the next scan cycle (every scanDelay ticks)
     }
 
     @Override

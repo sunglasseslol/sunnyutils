@@ -1,7 +1,7 @@
 package dev.sunglasses.sunnyutils.mixin;
 
 import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
-import dev.sunglasses.sunnyutils.modules.utilities.Fullbright;
+import dev.sunglasses.sunnyutils.modules.world.Fullbright;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

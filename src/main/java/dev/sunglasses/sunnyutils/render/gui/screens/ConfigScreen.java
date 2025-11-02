@@ -2,13 +2,12 @@ package dev.sunglasses.sunnyutils.render.gui.screens;
 
 import dev.sunglasses.sunnyutils.modules.base.ModuleManager;
 import dev.sunglasses.sunnyutils.modules.utilities.Ruler;
-import dev.sunglasses.sunnyutils.modules.utilities.Scaffold;
-import dev.sunglasses.sunnyutils.modules.utilities.XRay;
+import dev.sunglasses.sunnyutils.modules.world.Scaffold;
+import dev.sunglasses.sunnyutils.modules.world.XRay;
 import dev.sunglasses.sunnyutils.render.gui.Gui;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.RulerConfig;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.ScaffoldConfig;
 import dev.sunglasses.sunnyutils.render.gui.screens.moduleconfigs.XRayConfig;
-import dev.sunglasses.sunnyutils.utils.ButtonData;
 import dev.sunglasses.sunnyutils.utils.ScreenButtonData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.modules.utilities;
+package dev.sunglasses.sunnyutils.modules.world;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -200,10 +200,17 @@ public class XRay extends ToggleModule {
     public void onToggle() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null && mc.levelRenderer != null) {
-            mc.levelRenderer.allChanged();
+            // Clear cache before reloading chunks
+            oreCache.clear();
+            lastPlayerChunk = null;
+
+            // Use try-catch to prevent crashes
+            try {
+                mc.levelRenderer.allChanged();
+            } catch (Exception e) {
+                System.err.println("Error reloading chunks for XRay: " + e.getMessage());
+            }
         }
-        oreCache.clear();
-        lastPlayerChunk = null;
     }
 
     @SubscribeEvent
@@ -213,6 +220,11 @@ public class XRay extends ToggleModule {
         XRay xray = ModuleManager.getModule(XRay.class);
         if (mc.level == null || mc.player == null || xray == null || !xray.isEnabled()) return;
 
+        // Don't scan or render if the world is being saved or if server is stopping
+        if (mc.isSameThread() && mc.level.getServer() != null && mc.level.getServer().isStopped()) {
+            return;
+        }
+
         BlockPos playerPos = mc.player.blockPosition();
         BlockPos playerChunk = new BlockPos(playerPos.getX() >> 4, 0, playerPos.getZ() >> 4);
 
@@ -221,7 +233,15 @@ public class XRay extends ToggleModule {
         if (scanTicker >= getScanDelay() || !playerChunk.equals(lastPlayerChunk)) {
             scanTicker = 0;
             lastPlayerChunk = playerChunk;
-            scanForOres(mc, playerPos);
+
+            // Only scan if not saving - add safety check
+            try {
+                scanForOres(mc, playerPos);
+            } catch (Exception e) {
+                System.err.println("Error during XRay scan: " + e.getMessage());
+                // Clear cache on error to prevent repeated failures
+                oreCache.clear();
+            }
         }
 
         // Render cached ores
@@ -253,6 +273,11 @@ public class XRay extends ToggleModule {
     private static void scanForOres(Minecraft mc, BlockPos playerPos) {
         oreCache.clear();
 
+        // Safety checks
+        if (mc.level == null || playerPos == null) {
+            return;
+        }
+
         int chunkRadius = getChunkRadius();
         int minY = Math.max(mc.level.getMinY(), playerPos.getY() - 64);
         int maxY = Math.min(mc.level.getMaxY(), playerPos.getY() + 64);
@@ -262,30 +287,35 @@ public class XRay extends ToggleModule {
                 int worldChunkX = (playerPos.getX() >> 4) + chunkX;
                 int worldChunkZ = (playerPos.getZ() >> 4) + chunkZ;
 
-                LevelChunk chunk = mc.level.getChunk(worldChunkX, worldChunkZ);
-                if (chunk == null) continue;
+                try {
+                    LevelChunk chunk = mc.level.getChunk(worldChunkX, worldChunkZ);
+                    if (chunk == null) continue;
 
-                BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-                for (int x = 0; x < 16; x += 1) {
-                    for (int z = 0; z < 16; z += 1) {
-                        for (int y = minY; y < maxY; y += 1) {
-                            mutablePos.set((worldChunkX << 4) + x, y, (worldChunkZ << 4) + z);
+                    BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+                    for (int x = 0; x < 16; x += 1) {
+                        for (int z = 0; z < 16; z += 1) {
+                            for (int y = minY; y < maxY; y += 1) {
+                                mutablePos.set((worldChunkX << 4) + x, y, (worldChunkZ << 4) + z);
 
-                            Block block = chunk.getBlockState(mutablePos).getBlock();
+                                Block block = chunk.getBlockState(mutablePos).getBlock();
 
-                            // Check if block is in whitelist
-                            if (whitelistedBlocks.contains(block)) {
-                                // Assign a color (we can make this configurable later)
-                                float[] color = DEFAULT_XRAY_BLOCKS.getOrDefault(block,
-                                        new float[]{1.0f, 1.0f, 1.0f, 0.8f}); // White default
-                                oreCache.put(mutablePos.immutable(), color);
-                            }
-                            // Also check default blocks
-                            else if (DEFAULT_XRAY_BLOCKS.containsKey(block)) {
-                                oreCache.put(mutablePos.immutable(), DEFAULT_XRAY_BLOCKS.get(block));
+                                // Check if block is in whitelist
+                                if (whitelistedBlocks.contains(block)) {
+                                    // Assign a color (we can make this configurable later)
+                                    float[] color = DEFAULT_XRAY_BLOCKS.getOrDefault(block,
+                                            new float[]{1.0f, 1.0f, 1.0f, 0.8f}); // White default
+                                    oreCache.put(mutablePos.immutable(), color);
+                                }
+                                // Also check default blocks
+                                else if (DEFAULT_XRAY_BLOCKS.containsKey(block)) {
+                                    oreCache.put(mutablePos.immutable(), DEFAULT_XRAY_BLOCKS.get(block));
+                                }
                             }
                         }
                     }
+                } catch (Exception e) {
+                    // Skip this chunk if there's an error
+                    System.err.println("Error scanning chunk at " + worldChunkX + ", " + worldChunkZ + ": " + e.getMessage());
                 }
             }
         }

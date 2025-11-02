@@ -1,4 +1,4 @@
-package dev.sunglasses.sunnyutils.modules.utilities;
+package dev.sunglasses.sunnyutils.modules.world;
 
 import dev.sunglasses.sunnyutils.modules.base.ToggleModule;
 import net.minecraft.client.Minecraft;
