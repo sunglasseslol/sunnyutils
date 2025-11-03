@@ -26,7 +26,7 @@ public class WorldData extends GenericModule {
 
     @Override
     public void onTick() {
-        if(mc == null) return;
+        if(mc == null || mc.player == null) return;
         LocalPlayer player = mc.player;
 
         int playerX = (int) player.getX();

@@ -8,6 +8,14 @@
   "key.sunnyutils.modules.xray": "Toggle XRay",
   "key.sunnyutils.modules.showchat": "ClearChat",
   "key.sunnyutils.modules.ruler": "Toggle Ruler",
+  "key.sunnyutils.modules.radar": "Toggle Radar",
+  "key.sunnyutils.modules.configscreenopener": "Open Config",
+  "key.sunnyutils.modules.rulerareatoggle": "Toggle Ruler Mode",
+  "key.sunnyutils.modules.rulerclear": "Clear Ruler",
+
+
+
+
 
 
   "sunnyutils.configuration.areaMode": "Ruler Mode"

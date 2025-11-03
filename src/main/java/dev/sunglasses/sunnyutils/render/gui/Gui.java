@@ -20,7 +20,6 @@ import org.joml.Matrix4f;
 import java.util.List;
 import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = SunnyUtils.MODID, value = Dist.CLIENT)
 public class Gui {
     /*
     5, 5, = TOP LEFT
