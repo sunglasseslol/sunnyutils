@@ -1,6 +1,8 @@
 package dev.sunglasses.sunnyutils.modules.base;
 
+import dev.sunglasses.sunnyutils.SunnyUtils;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class Module {

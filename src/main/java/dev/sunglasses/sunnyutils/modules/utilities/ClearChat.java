@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 public class ClearChat extends ButtonModule {
 
     public ClearChat() {
-        super("ClearChat", GLFW.GLFW_KEY_U, "key.sunnyutils.modules");
+        super("ClearChat", GLFW.GLFW_KEY_U);
     }
 
     @Override

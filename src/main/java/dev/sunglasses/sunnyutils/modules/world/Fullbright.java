@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class Fullbright extends ToggleModule {
     public Fullbright() {
-        super("Fullbright", GLFW.GLFW_KEY_G, "key.sunnyutils.modules");
+        super("Fullbright", GLFW.GLFW_KEY_G);
     }
 
     @Override

@@ -9,12 +9,12 @@ public abstract class HoldModule extends Module {
     private boolean isHeld = false;
     private boolean wasHeld = false;
 
-    public HoldModule(String name, int defaultKey, String category) {
+    public HoldModule(String name, int defaultKey) {
         super(name);
         setKeyMapping(new KeyMapping(
                 "key.sunnyutils.modules." + name.toLowerCase(),
                 defaultKey,
-                category
+                "key.sunnyutils.modules"
         ));
     }
 

@@ -21,10 +21,12 @@ public class WorldData extends GenericModule {
 
     private final List<Component> displayLines = new ArrayList<>();
 
+    Minecraft mc = Minecraft.getInstance();
+
+
     @Override
     public void onTick() {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) return;
+        if(mc == null) return;
         LocalPlayer player = mc.player;
 
         int playerX = (int) player.getX();

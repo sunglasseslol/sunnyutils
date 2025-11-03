@@ -5,6 +5,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class ShowChat extends HoldModule {
     public ShowChat() {
-        super("ShowChat", GLFW.GLFW_KEY_B, "key.sunnyutils.modules");
+        super("ShowChat", GLFW.GLFW_KEY_B);
     }
 }

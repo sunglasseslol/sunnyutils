@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ConfigScreenOpener extends ButtonModule {
     public ConfigScreenOpener() {
-        super("ConfigScreenOpener", GLFW.GLFW_KEY_SEMICOLON, "key.sunnyutils.modules");
+        super("ConfigScreenOpener", GLFW.GLFW_KEY_SEMICOLON);
     }
 
     @Override

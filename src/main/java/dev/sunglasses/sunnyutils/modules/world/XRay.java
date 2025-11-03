@@ -99,7 +99,7 @@ public class XRay extends ToggleModule {
     private static int renderDistance = 64; // max blocks to render ores
 
     public XRay() {
-        super("XRay", GLFW.GLFW_KEY_X, "key.sunnyutils.modules");
+        super("XRay", GLFW.GLFW_KEY_X);
         loadWhitelist(); // Load whitelist when module is created
     }
 

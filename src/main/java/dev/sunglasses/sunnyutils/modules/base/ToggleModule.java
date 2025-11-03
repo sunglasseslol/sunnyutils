@@ -5,12 +5,12 @@ import net.minecraft.client.KeyMapping;
 public abstract class ToggleModule extends Module {
     private boolean enabled = false;
 
-    public ToggleModule(String name, int defaultKey, String category) {
+    public ToggleModule(String name, int defaultKey) {
         super(name);
         setKeyMapping(new KeyMapping(
                 "key.sunnyutils.modules." + name.toLowerCase(),
                 defaultKey,
-                category
+                "key.sunnyutils.modules"
         ));
     }
 

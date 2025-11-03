@@ -3,8 +3,12 @@
   "key.sunnyutils.modules.clearchat": "ClearChat",
   "key.sunnyutils.modules.fullbright": "Toggle Fullbright",
   "key.sunnyutils.modules.chunkborders": "Toggle ChunkBorders",
-  "key.sunnyutils.modules.Hitboxes": "Toggle Entity Hitboxes",
+  "key.sunnyutils.modules.hitboxes": "Toggle Entity Hitboxes",
   "key.sunnyutils.modules.scaffold": "Toggle Scaffold",
+  "key.sunnyutils.modules.xray": "Toggle XRay",
+  "key.sunnyutils.modules.showchat": "ClearChat",
+  "key.sunnyutils.modules.ruler": "Toggle Ruler",
+
 
   "sunnyutils.configuration.areaMode": "Ruler Mode"
 }

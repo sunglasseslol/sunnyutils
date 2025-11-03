@@ -17,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 public class Scaffold extends ToggleModule {
 
     public Scaffold() {
-        super("Scaffold", GLFW.GLFW_KEY_V, "key.sunnyutils.modules");
+        super("Scaffold", GLFW.GLFW_KEY_V);
     }
 
     @Override

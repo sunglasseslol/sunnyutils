@@ -3,12 +3,12 @@ package dev.sunglasses.sunnyutils.modules.base;
 import net.minecraft.client.KeyMapping;
 
 public abstract class ButtonModule extends Module {
-    public ButtonModule(String name, int defaultKey, String category) {
+    public ButtonModule(String name, int defaultKey) {
         super(name);
         setKeyMapping(new KeyMapping(
                 "key.sunnyutils.modules." + name.toLowerCase(),
                 defaultKey,
-                category
+                "key.sunnyutils.modules"
         ));
     }
 

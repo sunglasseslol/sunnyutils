@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 public class RulerClear extends Submodule {
 
     public RulerClear() {
-        super("RulerClear", GLFW.GLFW_KEY_C, "key.sunnyutils.modules", ModuleManager.getModule(Ruler.class));
+        super("RulerClear", GLFW.GLFW_KEY_C, ModuleManager.getModule(Ruler.class));
     }
 
     @Override

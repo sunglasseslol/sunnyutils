@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class Hitboxes extends ToggleModule {
     public Hitboxes() {
-        super("Hitboxes", GLFW.GLFW_KEY_J, "key.sunnyutils.modules");
+        super("Hitboxes", GLFW.GLFW_KEY_J);
     }
 
     @Override

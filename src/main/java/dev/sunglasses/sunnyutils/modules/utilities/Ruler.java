@@ -27,7 +27,7 @@ import org.lwjgl.glfw.GLFW;
 @EventBusSubscriber(modid = SunnyUtils.MODID)
 public class Ruler extends ToggleModule {
     public Ruler() {
-        super("Ruler", GLFW.GLFW_KEY_K, "key.sunnyutils.modules");
+        super("Ruler", GLFW.GLFW_KEY_K);
     }
 
     private static BlockPos firstPos = null;
