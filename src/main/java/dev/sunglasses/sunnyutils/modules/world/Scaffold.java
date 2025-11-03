@@ -47,7 +47,7 @@ public class Scaffold extends ToggleModule {
         int blockSlot = findBlockSlotInHotbar(player);
         if (blockSlot == -1) return;
 
-        player.getInventory().setSelectedSlot(blockSlot);
+        player.getInventory().selected = blockSlot;
 
         // Try to place the block
         placeBlock(player, level, belowPos);

@@ -26,7 +26,7 @@ DurabilityNotifier extends GenericModule {
         if (player == null) return items;
 
         // Main inventory (hotbar + main)
-        items.addAll(player.getInventory().getNonEquipmentItems());
+        items.addAll(player.getInventory().items);
 
         // Armor slots
         items.add(player.getItemBySlot(EquipmentSlot.HEAD));

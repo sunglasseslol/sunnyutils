@@ -82,7 +82,8 @@ public class Ruler extends ToggleModule {
     }
 
     @SubscribeEvent
-    public static void onRenderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
+    public static void onRenderLevel(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
         Minecraft mc = Minecraft.getInstance();
         Ruler ruler = ModuleManager.getModule(Ruler.class);
         if (mc.level == null || ruler == null || !ruler.isEnabled()) return;

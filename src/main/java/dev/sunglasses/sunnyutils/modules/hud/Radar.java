@@ -1,5 +1,6 @@
 package dev.sunglasses.sunnyutils.modules.hud;
 
+import dev.sunglasses.sunnyutils.SunnyUtils;
 import dev.sunglasses.sunnyutils.modules.base.ButtonModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -16,8 +17,6 @@ public class Radar extends ButtonModule {
     public Radar() {
         super("Radar", GLFW.GLFW_KEY_P);
     }
-
-    private Minecraft mc = Minecraft.getInstance();
 
     public static List<AbstractClientPlayer> getPlayersInRenderDistance() {
         Minecraft mc = Minecraft.getInstance();
@@ -87,9 +86,11 @@ public class Radar extends ButtonModule {
     }
 
     @Override
-    public void onTick() {
+    public void onPress() {
+        Minecraft mc = Minecraft.getInstance();
         if(mc == null) return;
-
+        System.out.println("test");
+        SunnyUtils.LOGGER.info("TEST 2");
         printPlayerInfo();
     }
 }

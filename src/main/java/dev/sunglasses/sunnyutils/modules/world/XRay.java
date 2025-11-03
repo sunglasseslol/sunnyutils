@@ -360,8 +360,8 @@ public class XRay extends ToggleModule {
     }
 
     @SubscribeEvent
-    public static void onRenderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
-
+    public static void onRenderLevel(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
         Minecraft mc = Minecraft.getInstance();
         XRay xray = ModuleManager.getModule(XRay.class);
         if (mc.level == null || mc.player == null || xray == null || !xray.isEnabled()) return;

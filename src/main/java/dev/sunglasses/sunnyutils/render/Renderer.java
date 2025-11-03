@@ -1,8 +1,9 @@
 package dev.sunglasses.sunnyutils.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.sunglasses.sunnyutils.utils.MathUtils;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -16,16 +17,20 @@ import java.util.Set;
 public class Renderer {
     public static final RenderType SOLID_BOX = RenderType.create(
             "solid_box",
-            1536, // buffer size (same as most built-ins)
-            false, // affectsCrumbling
-            true,  // sortOnUpload
-            RenderPipelines.DEBUG_QUADS, // the pipeline defines POSITION_COLOR
+            DefaultVertexFormat.POSITION_COLOR,
+            VertexFormat.Mode.QUADS,
+            1536,
+            false,
+            true,
             RenderType.CompositeState.builder()
+                    .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
                     .setTextureState(RenderStateShard.NO_TEXTURE)
+                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(RenderStateShard.NO_LIGHTMAP)
                     .setOverlayState(RenderStateShard.NO_OVERLAY)
                     .setLayeringState(RenderStateShard.NO_LAYERING)
                     .setOutputState(RenderStateShard.MAIN_TARGET)
+                    .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                     .createCompositeState(false)
     );
 
