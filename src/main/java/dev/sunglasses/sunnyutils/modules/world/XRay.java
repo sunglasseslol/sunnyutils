@@ -12,7 +12,6 @@ import dev.sunglasses.sunnyutils.render.Renderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,11 +42,15 @@ public class XRay extends ToggleModule {
     // User's custom whitelist
     private static Set<Block> whitelistedBlocks = new HashSet<>();
 
-    // Config file path
+    // User's custom colors for blocks (stored as hex color integers)
+    private static Map<Block, Integer> blockColors = new HashMap<>();
+
+    // Config file paths
     private static final Path CONFIG_PATH = Paths.get("config", "sunnyutils", "xray_whitelist.json");
+    private static final Path COLORS_CONFIG_PATH = Paths.get("config", "sunnyutils", "xray_colors.json");
 
     static {
-        // Default blocks (these are always available even if not in whitelist)
+        // Default blocks (these are shown even if not in whitelist for backwards compatibility)
         // Diamonds - Cyan
         DEFAULT_XRAY_BLOCKS.put(Blocks.DIAMOND_ORE, new float[]{0.0f, 1.0f, 1.0f, 0.8f});
         DEFAULT_XRAY_BLOCKS.put(Blocks.DEEPSLATE_DIAMOND_ORE, new float[]{0.0f, 1.0f, 1.0f, 0.8f});
@@ -88,6 +91,19 @@ public class XRay extends ToggleModule {
         DEFAULT_XRAY_BLOCKS.put(Blocks.NETHER_QUARTZ_ORE, new float[]{1.0f, 1.0f, 1.0f, 0.8f});
     }
 
+    // Default blocks to add to whitelist on first launch
+    private static final List<Block> DEFAULT_WHITELIST = List.of(
+            Blocks.DIAMOND_ORE,
+            Blocks.DEEPSLATE_DIAMOND_ORE,
+            Blocks.EMERALD_ORE,
+            Blocks.DEEPSLATE_EMERALD_ORE,
+            Blocks.GOLD_ORE,
+            Blocks.DEEPSLATE_GOLD_ORE,
+            Blocks.IRON_ORE,
+            Blocks.DEEPSLATE_IRON_ORE,
+            Blocks.ANCIENT_DEBRIS
+    );
+
     // Cache ore positions to avoid rescanning every frame
     private static final Map<BlockPos, float[]> oreCache = new HashMap<>();
     private static int scanTicker = 0;
@@ -97,6 +113,10 @@ public class XRay extends ToggleModule {
     private static int scanDelay = 40; // ticks between scans (default 2 seconds)
     private static int chunkRadius = 3; // chunks to scan around player
     private static int renderDistance = 64; // max blocks to render ores
+
+    // Delayed chunk reload system
+    private static int reloadDelay = 0;
+    private static boolean needsReload = false;
 
     public XRay() {
         super("XRay", GLFW.GLFW_KEY_X);
@@ -131,6 +151,43 @@ public class XRay extends ToggleModule {
         whitelistedBlocks.remove(block);
     }
 
+    // Color management
+    public static Integer getBlockColor(Block block) {
+        return blockColors.get(block);
+    }
+
+    public static void setBlockColor(Block block, int color) {
+        blockColors.put(block, color);
+    }
+
+    public static Map<Block, Integer> getAllBlockColors() {
+        return new HashMap<>(blockColors);
+    }
+
+    // Convert color integer (0xRRGGBB) to float array for rendering
+    private static float[] colorToFloatArray(int color) {
+        float r = ((color >> 16) & 0xFF) / 255.0f;
+        float g = ((color >> 8) & 0xFF) / 255.0f;
+        float b = (color & 0xFF) / 255.0f;
+        return new float[]{r, g, b, 0.8f};
+    }
+
+    // Get the color for a block (custom or default)
+    private static float[] getColorForBlock(Block block) {
+        // Check if user has set a custom color
+        if (blockColors.containsKey(block)) {
+            return colorToFloatArray(blockColors.get(block));
+        }
+
+        // Fall back to default color if available
+        if (DEFAULT_XRAY_BLOCKS.containsKey(block)) {
+            return DEFAULT_XRAY_BLOCKS.get(block);
+        }
+
+        // Default white if no color set
+        return new float[]{1.0f, 1.0f, 1.0f, 0.8f};
+    }
+
     // Save whitelist to config file
     public static void saveWhitelist() {
         try {
@@ -144,7 +201,7 @@ public class XRay extends ToggleModule {
                 blockIds.add(id.toString());
             }
 
-            // Write to file as JSON
+            // Write whitelist to file as JSON
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
                 gson.toJson(blockIds, writer);
@@ -155,6 +212,34 @@ public class XRay extends ToggleModule {
             System.err.println("Failed to save XRay whitelist: " + e.getMessage());
             e.printStackTrace();
         }
+
+        // Also save colors
+        saveColors();
+    }
+
+    // Save custom block colors
+    private static void saveColors() {
+        try {
+            Files.createDirectories(COLORS_CONFIG_PATH.getParent());
+
+            // Convert colors to JSON format: {"minecraft:diamond_ore": "00FFFF", ...}
+            Map<String, String> colorMap = new HashMap<>();
+            for (Map.Entry<Block, Integer> entry : blockColors.entrySet()) {
+                ResourceLocation id = BuiltInRegistries.BLOCK.getKey(entry.getKey());
+                String hexColor = String.format("%06X", entry.getValue() & 0xFFFFFF);
+                colorMap.put(id.toString(), hexColor);
+            }
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            try (FileWriter writer = new FileWriter(COLORS_CONFIG_PATH.toFile())) {
+                gson.toJson(colorMap, writer);
+            }
+
+            System.out.println("Saved " + colorMap.size() + " custom colors");
+        } catch (IOException e) {
+            System.err.println("Failed to save XRay colors: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     // Load whitelist from config file
@@ -162,7 +247,10 @@ public class XRay extends ToggleModule {
         whitelistedBlocks.clear();
 
         if (!Files.exists(CONFIG_PATH)) {
-            System.out.println("No XRay whitelist config found, using defaults");
+            System.out.println("No XRay whitelist config found, creating with defaults");
+            // First launch - add default blocks
+            whitelistedBlocks.addAll(DEFAULT_WHITELIST);
+            saveWhitelist(); // Save the defaults
             return;
         }
 
@@ -194,21 +282,79 @@ public class XRay extends ToggleModule {
             System.err.println("Failed to load XRay whitelist: " + e.getMessage());
             e.printStackTrace();
         }
+
+        // Also load custom colors
+        loadColors();
+    }
+
+    // Load custom block colors
+    private static void loadColors() {
+        blockColors.clear();
+
+        if (!Files.exists(COLORS_CONFIG_PATH)) {
+            System.out.println("No XRay colors config found");
+            return;
+        }
+
+        try {
+            Gson gson = new Gson();
+            try (FileReader reader = new FileReader(COLORS_CONFIG_PATH.toFile())) {
+                Map<String, String> colorMap = gson.fromJson(reader, new TypeToken<Map<String, String>>(){}.getType());
+
+                if (colorMap != null) {
+                    for (Map.Entry<String, String> entry : colorMap.entrySet()) {
+                        try {
+                            ResourceLocation resourceLocation = ResourceLocation.parse(entry.getKey());
+                            Optional<Holder.Reference<Block>> holder = BuiltInRegistries.BLOCK.get(resourceLocation);
+                            if (holder.isPresent()) {
+                                Block block = holder.get().value();
+                                int color = Integer.parseInt(entry.getValue(), 16);
+                                blockColors.put(block, color);
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Failed to load color for block: " + entry.getKey());
+                        }
+                    }
+                }
+            }
+
+            System.out.println("Loaded " + blockColors.size() + " custom colors");
+        } catch (Exception e) {
+            System.err.println("Failed to load XRay colors: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onToggle() {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null && mc.levelRenderer != null) {
-            // Clear cache before reloading chunks
-            oreCache.clear();
-            lastPlayerChunk = null;
+        // Clear cache immediately
+        oreCache.clear();
+        lastPlayerChunk = null;
 
-            // Use try-catch to prevent crashes
-            try {
-                mc.levelRenderer.allChanged();
-            } catch (Exception e) {
-                System.err.println("Error reloading chunks for XRay: " + e.getMessage());
+        // Schedule chunk reload after 5 ticks (250ms)
+        // This gives the screen time to fully close
+        needsReload = true;
+        reloadDelay = 5;
+
+        System.out.println("XRay toggled: " + (isEnabled() ? "ON" : "OFF"));
+    }
+
+    @Override
+    public void onTick() {
+        // Handle delayed chunk reload
+        if (needsReload && reloadDelay > 0) {
+            reloadDelay--;
+            if (reloadDelay == 0) {
+                needsReload = false;
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.level != null && mc.levelRenderer != null && mc.screen == null) {
+                    try {
+                        mc.levelRenderer.allChanged();
+                        System.out.println("Chunks reloaded for XRay");
+                    } catch (Exception e) {
+                        System.err.println("Error reloading chunks: " + e.getMessage());
+                    }
+                }
             }
         }
     }
@@ -301,12 +447,11 @@ public class XRay extends ToggleModule {
 
                                 // Check if block is in whitelist
                                 if (whitelistedBlocks.contains(block)) {
-                                    // Assign a color (we can make this configurable later)
-                                    float[] color = DEFAULT_XRAY_BLOCKS.getOrDefault(block,
-                                            new float[]{1.0f, 1.0f, 1.0f, 0.8f}); // White default
+                                    // Use custom or default color
+                                    float[] color = getColorForBlock(block);
                                     oreCache.put(mutablePos.immutable(), color);
                                 }
-                                // Also check default blocks
+                                // Also check default blocks (for backwards compatibility)
                                 else if (DEFAULT_XRAY_BLOCKS.containsKey(block)) {
                                     oreCache.put(mutablePos.immutable(), DEFAULT_XRAY_BLOCKS.get(block));
                                 }
